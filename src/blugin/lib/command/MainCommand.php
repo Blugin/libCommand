@@ -35,6 +35,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
+use pocketmine\Server;
 
 class MainCommand extends Command implements PluginOwned, CommandExecutor{
     use PluginOwnedTrait;
@@ -97,7 +98,7 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
                 return true;
             }
         }
-        $sender->sendMessage($sender->getLanguage()->translateString("commands.generic.usage", [$this->getUsage($sender)]));
+        $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage($sender)]));
         return true;
     }
 
@@ -133,7 +134,7 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
             return $this->owningPlugin->getLanguage()->translate($str, $params);
         }
 
-        return $sender->getLanguage()->translateString($str, $params);
+        return Server::getInstance()->getLanguage()->translateString($str, $params);
     }
 
     /**

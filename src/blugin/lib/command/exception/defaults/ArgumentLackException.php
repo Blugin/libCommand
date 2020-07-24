@@ -31,11 +31,12 @@ use blugin\lib\command\exception\IHandleable;
 use blugin\lib\command\Subcommand;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
+use pocketmine\Server;
 
 class ArgumentLackException extends InvalidCommandSyntaxException implements IHandleable{
     public static function getHandler() : \Closure{
         return function(ArgumentLackException $e, CommandSender $sender, Subcommand $subcommand) : void{
-            $sender->sendMessage($sender->getLanguage()->translateString("commands.generic.usage", [$subcommand->getUsage()]));
+            $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$subcommand->getUsage()]));
         };
     }
 }
