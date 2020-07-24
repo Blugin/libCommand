@@ -33,12 +33,11 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
-use pocketmine\plugin\PluginOwned;
-use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\Server;
 
-class MainCommand extends Command implements PluginOwned, CommandExecutor{
-    use PluginOwnedTrait;
+class MainCommand extends Command implements CommandExecutor{
+    /** @var PluginBase */
+    private $owningPlugin;
 
     /** @var Subcommand[] */
     private $subcommands = [];
@@ -172,5 +171,10 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
     /** @return ExceptionHandler */
     public function getExceptionHandler() : ExceptionHandler{
         return $this->exceptionHandler;
+    }
+
+    /** @return PluginBase */
+    public function getOwningPlugin() : PluginBase{
+        return $this->owningPlugin;
     }
 }
