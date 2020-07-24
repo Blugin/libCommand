@@ -3,6 +3,6 @@ build-by-default: true
 branches:
 - stable
 projects:
-  libSubcommands-PMMP:
+  libSubcommands:
     path: ""
 ...
