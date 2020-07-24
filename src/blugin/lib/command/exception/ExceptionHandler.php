@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\exception;
 
-use blugin\lib\command\exception\defaults\ArgumentLackException;
 use blugin\lib\command\exception\defaults\GenericInvalidBlockException;
 use blugin\lib\command\exception\defaults\GenericInvalidItemException;
 use blugin\lib\command\exception\defaults\GenericInvalidNumberException;
@@ -35,8 +34,13 @@ use blugin\lib\command\exception\defaults\GenericInvalidPlayerException;
 use blugin\lib\command\exception\defaults\GenericInvalidWorldException;
 use blugin\lib\command\exception\defaults\GenericNumberTooBigException;
 use blugin\lib\command\exception\defaults\GenericNumberTooSmallException;
+use blugin\lib\command\exception\defaults\ArgumentLackException;
 use blugin\lib\command\MainCommand;
 use blugin\lib\command\Subcommand;
+use DaveRandom\CallbackValidator\BuiltInTypes;
+use DaveRandom\CallbackValidator\CallbackType;
+use DaveRandom\CallbackValidator\ParameterType;
+use DaveRandom\CallbackValidator\ReturnType;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\Utils;
 
@@ -53,10 +57,10 @@ class ExceptionHandler{
 
         //Register default handlers
         $this->register(ArgumentLackException::class);
-        $this->register(GenericInvalidBlockException::class);
-        $this->register(GenericInvalidItemException::class);
+        $this->register(GenericInvalidBlockException::class);;
+        $this->register(GenericInvalidItemException::class);;
         $this->register(GenericInvalidNumberException::class);
-        $this->register(GenericInvalidPlayerException::class);
+        $this->register(GenericInvalidPlayerException::class);;
         $this->register(GenericInvalidWorldException::class);
         $this->register(GenericNumberTooBigException::class);
         $this->register(GenericNumberTooSmallException::class);
@@ -92,8 +96,16 @@ class ExceptionHandler{
                 throw new \TypeError("$className is Not instanceof IHandleable. Must require '\\Closure \$handerFunc' parameter.");
             }
         }
-        Utils::validateCallableSignature(function(\Exception $e, CommandSender $sender, Subcommand $subcommand, MainCommand $command) : void{
-        }, $handlerFunc);
+        $sig = new CallbackType(
+            new ReturnType(BuiltInTypes::VOID),
+            new ParameterType("e", \Exception::class, ParameterType::COVARIANT),
+            new ParameterType("sender", CommandSender::class),
+            new ParameterType("subcommand", Subcommand::class,ParameterType::COVARIANT | ParameterType::OPTIONAL),
+            new ParameterType("command", MainCommand::class,  ParameterType::COVARIANT | ParameterType::OPTIONAL)
+        );
+        if(!$sig->isSatisfiedBy($handlerFunc)){
+            throw new \TypeError("Declaration of callable `" . CallbackType::createFromCallable($handlerFunc) . "` must be compatible with `" . $sig . "`");
+        }
 
         $this->handlers[$className] = $handlerFunc;
     }

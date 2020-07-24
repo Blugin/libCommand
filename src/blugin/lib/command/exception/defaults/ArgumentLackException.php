@@ -35,7 +35,7 @@ use pocketmine\Server;
 
 class ArgumentLackException extends InvalidCommandSyntaxException implements IHandleable{
     public static function getHandler() : \Closure{
-        return function(\Exception $e, CommandSender $sender, Subcommand $subcommand) : void{
+        return function(ArgumentLackException $e, CommandSender $sender, Subcommand $subcommand) : void{
             $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$subcommand->getUsage()]));
         };
     }
