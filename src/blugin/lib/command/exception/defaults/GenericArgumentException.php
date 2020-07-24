@@ -36,7 +36,7 @@ abstract class GenericArgumentException extends \InvalidArgumentException implem
     const LABEL = "";
 
     public static function getHandler() : \Closure{
-        return function(\Exception $e, CommandSender $sender, Subcommand $subcommand, MainCommand $mainCommand) : void{
+        return function(GenericArgumentException $e, CommandSender $sender, Subcommand $subcommand, MainCommand $mainCommand) : void{
             $mainCommand->sendMessage($sender, "commands.generic." . $e::LABEL, $e->getArgs());
         };
     }
