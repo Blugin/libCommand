@@ -29,8 +29,8 @@ namespace blugin\lib\command\validator\defaults;
 
 use blugin\lib\command\exception\defaults\GenericInvalidWorldException;
 use blugin\lib\command\validator\ArgumentValidator;
+use pocketmine\level\Level as World;
 use pocketmine\Server;
-use pocketmine\world\World;
 
 class WorldArgumentValidator implements ArgumentValidator{
     /**
@@ -41,7 +41,7 @@ class WorldArgumentValidator implements ArgumentValidator{
      * @throw \Exception
      */
     public static function validate(string $argument) : World{
-        $world = Server::getInstance()->getWorldManager()->getWorldByName($argument);
+        $world = Server::getInstance()->getLevelByName($argument);
         if($world === null)
             throw new GenericInvalidWorldException($argument);
 

@@ -30,7 +30,7 @@ namespace blugin\lib\command\validator\defaults;
 use blugin\lib\command\exception\defaults\GenericInvalidItemException;
 use blugin\lib\command\validator\ArgumentValidator;
 use pocketmine\item\Item;
-use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\item\ItemFactory;
 
 class ItemArgumentValidator implements ArgumentValidator{
     /**
@@ -42,7 +42,7 @@ class ItemArgumentValidator implements ArgumentValidator{
      */
     public static function validate(string $argument) : Item{
         try{
-            return LegacyStringToItemParser::getInstance()->parse($argument);
+            return ItemFactory::fromStringSingle($argument);
         }catch(\InvalidArgumentException $e){
             throw new GenericInvalidItemException($argument);
         }

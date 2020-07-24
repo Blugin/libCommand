@@ -29,7 +29,7 @@ namespace blugin\lib\command\validator\defaults;
 
 use blugin\lib\command\exception\defaults\GenericInvalidPlayerException;
 use blugin\lib\command\validator\ArgumentValidator;
-use pocketmine\player\Player;
+use pocketmine\Player;
 use pocketmine\Server;
 
 class PlayerArgumentValidator implements ArgumentValidator{
