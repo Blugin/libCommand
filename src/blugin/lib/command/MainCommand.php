@@ -119,7 +119,8 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
                 $subCommands[] = $subCommand->getName();
             }
         }
-        return $this->getMessage($sender, "commands.chunkloader.usage", [implode(" | ", $subCommands)]);
+        $label = strtolower($this->getName());
+        return $this->getMessage($sender, "commands.$label.usage", [implode(" | ", $subCommands)]);
     }
 
     /**

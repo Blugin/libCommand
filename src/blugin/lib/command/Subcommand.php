@@ -163,7 +163,7 @@ abstract class Subcommand{
      * @return string
      */
     public function getFullMessage(string $str) : string{
-        $label = strtolower($this->mainCommand->getOwningPlugin()->getName());
+        $label = strtolower($this->mainCommand->getName());
         return "commands.$label.{$this->getLabel()}.$str";
     }
 
