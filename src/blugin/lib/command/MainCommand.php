@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\exception\ExceptionHandler;
-use blugin\lib\lang\LanguageHolder;
+use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -55,10 +55,10 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
         $this->owningPlugin = $owner;
         $this->exceptionHandler = new ExceptionHandler($this);
 
-        if($owner instanceof LanguageHolder){
+        if($owner instanceof TranslatorHolder){
             $label = strtolower($owner->getName());
-            $this->setUsage($owner->getLanguage()->translate("commands.$label.usage"));
-            $this->setDescription($owner->getLanguage()->translate("commands.$label.description"));
+            $this->setUsage($owner->getTranslator()->translate("commands.$label.usage"));
+            $this->setDescription($owner->getTranslator()->translate("commands.$label.description"));
         }
     }
 
@@ -110,7 +110,7 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
      * @return string
      */
     public function getUsage(CommandSender $sender = null) : string{
-        if($sender === null || !$this->owningPlugin instanceof LanguageHolder)
+        if($sender === null || !$this->owningPlugin instanceof TranslatorHolder)
             return $this->usageMessage;
 
         $subCommands = [];
@@ -130,8 +130,8 @@ class MainCommand extends Command implements PluginOwned, CommandExecutor{
      * @return string
      */
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
-        if($this->owningPlugin instanceof LanguageHolder){
-            return $this->owningPlugin->getLanguage()->translate($str, $params);
+        if($this->owningPlugin instanceof TranslatorHolder){
+            return $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
         }
 
         return Server::getInstance()->getLanguage()->translateString($str, $params);

@@ -5,5 +5,5 @@ version: 1.0.0
 api: [4.0.0]
 authors: ['Blugin-team', 'PresentKim']
 description: "[lib] Library to make subcommands of plug-in commands structured"
-softdepend: [libPluginLang]
+softdepend: [libTranslator]
 ...
