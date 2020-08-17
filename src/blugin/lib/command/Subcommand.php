@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\exception\defaults\ArgumentLackException;
-use blugin\lib\lang\LanguageHolder;
+use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\CommandSender;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
@@ -144,11 +144,15 @@ abstract class Subcommand{
         return $this->mainCommand->getPermission() . "." . $this->getLabel();
     }
 
-    /** @return string */
-    public function getUsage() : string{
+    /**
+     * @param CommandSender|null $sender
+     *
+     * @return string
+     */
+    public function getUsage(CommandSender $sender = null) : string{
         $plugin = $this->mainCommand->getOwningPlugin();
-        if($plugin instanceof LanguageHolder){
-            return $plugin->getLanguage()->translate($this->getFullMessage("usage"));
+        if($plugin instanceof TranslatorHolder){
+            return $plugin->getTranslator()->translateTo($this->getFullMessage("usage"), [], $sender);
         }
         return "";
     }
@@ -159,7 +163,7 @@ abstract class Subcommand{
      * @return string
      */
     public function getFullMessage(string $str) : string{
-        $label = strtolower($this->mainCommand->getOwningPlugin()->getName());
+        $label = strtolower($this->mainCommand->getName());
         return "commands.$label.{$this->getLabel()}.$str";
     }
 
