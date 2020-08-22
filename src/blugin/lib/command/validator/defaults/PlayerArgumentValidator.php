@@ -33,13 +33,6 @@ use pocketmine\Player;
 use pocketmine\Server;
 
 class PlayerArgumentValidator implements ArgumentValidator{
-    /**
-     * @param string $argument
-     *
-     * @return Player
-     *
-     * @throw \Exception
-     */
     public static function validate(string $argument) : Player{
         $player = Server::getInstance()->getPlayer($argument);
         if($player === null)

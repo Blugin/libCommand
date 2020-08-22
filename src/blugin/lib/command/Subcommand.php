@@ -35,8 +35,8 @@ use pocketmine\permission\PermissionManager;
 use pocketmine\utils\TextFormat;
 
 abstract class Subcommand{
-    /** @var MainCommand */
-    private $mainCommand;
+    /** @var BaseCommand */
+    private $baseCommand;
 
     /** @var string */
     private $name;
@@ -45,28 +45,22 @@ abstract class Subcommand{
     private $aliases;
 
     /**
-     * @param MainCommand $mainCommand
-     * @param null|string $name = null
-     * @param null|array  $aliases = null
+     * @param BaseCommand   $baseCommand
+     * @param null|string   $name = null
+     * @param null|string[] $aliases = null
      */
-    public function __construct(MainCommand $mainCommand, ?string $name = null, ?array $aliases = null){
-        $this->mainCommand = $mainCommand;
+    public function __construct(BaseCommand $baseCommand, ?string $name = null, ?array $aliases = null){
+        $this->baseCommand = $baseCommand;
 
         $label = $this->getLabel();
-        $config = $mainCommand->getOwningPlugin()->getConfig();
+        $config = $baseCommand->getOwningPlugin()->getConfig();
         $this->name = $name ?? $config->getNested("command.children.$label.name", $label);
         $this->aliases = $aliases ?? $config->getNested("command.children.$label.aliases", []);
 
         $permissionManager = PermissionManager::getInstance();
-        $permissionManager->addPermission(new Permission($this->getPermission(), $this->mainCommand->getUsage(), $permissionManager->getPermission($mainCommand->getPermission())->getDefault()));
+        $permissionManager->addPermission(new Permission($this->getPermission(), $this->baseCommand->getUsage(), $permissionManager->getPermission($baseCommand->getPermission())->getDefault()));
     }
 
-    /**
-     * @param CommandSender $sender
-     * @param string[]      $args = []
-     *
-     * @return bool
-     */
     public function handle(CommandSender $sender, array $args = []) : bool{
         if(!$this->testPermission($sender) || $this->execute($sender, $args))
             return true;
@@ -75,106 +69,75 @@ abstract class Subcommand{
     }
 
     /**
-     * @param CommandSender          $sender
-     * @param string                 $str
-     * @param float[]|int[]|string[] $params
+     * @param string[] $params
      */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
-        $sender->sendMessage($this->getMainCommand()->getMessage($sender, $this->getFullMessage($str), $params));
+        $sender->sendMessage($this->getBaseCommand()->getMessage($sender, $this->getFullMessage($str), $params));
     }
 
-    /**
-     * @param CommandSender $sender
-     *
-     * @return bool
-     */
     public function testPermission(CommandSender $sender) : bool{
         if($this->testPermissionSilent($sender))
             return true;
 
-        $this->mainCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
+        $this->baseCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
         return false;
     }
 
-    /**
-     * @param CommandSender $sender
-     *
-     * @return bool
-     */
     public function testPermissionSilent(CommandSender $sender) : bool{
         return $sender->hasPermission($this->getPermission());
     }
 
-    /**
-     * @param string $label
-     *
-     * @return bool
-     */
     public function checkLabel(string $label) : bool{
         return strcasecmp($label, $this->name) === 0 || in_array($label, $this->aliases);
     }
 
-    /** @return MainCommand */
-    public function getMainCommand() : MainCommand{
-        return $this->mainCommand;
+    public function getBaseCommand() : BaseCommand{
+        return $this->baseCommand;
     }
 
-    /** @return string */
     public function getName() : string{
         return $this->name;
     }
 
-    /** @param string $name */
     public function setName(string $name) : void{
         $this->name = $name;
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public function getAliases() : array{
         return $this->aliases;
     }
 
-    /** @param string[] $aliases */
+    /**
+     * @param string[] $aliases
+     */
     public function setAliases(array $aliases) : void{
         $this->aliases = $aliases;
     }
 
-    /** @return string */
     public function getPermission() : string{
-        return $this->mainCommand->getPermission() . "." . $this->getLabel();
+        return $this->baseCommand->getPermission() . "." . $this->getLabel();
     }
 
-    /**
-     * @param CommandSender|null $sender
-     *
-     * @return string
-     */
-    public function getUsage(CommandSender $sender = null) : string{
-        $plugin = $this->mainCommand->getOwningPlugin();
+    public function getUsage(?CommandSender $sender = null) : string{
+        $plugin = $this->baseCommand->getOwningPlugin();
         if($plugin instanceof TranslatorHolder){
             return $plugin->getTranslator()->translateTo($this->getFullMessage("usage"), [], $sender);
         }
         return "";
     }
 
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
     public function getFullMessage(string $str) : string{
-        $label = strtolower($this->mainCommand->getName());
+        $label = strtolower($this->baseCommand->getName());
         return "commands.$label.{$this->getLabel()}.$str";
     }
 
     /**
-     * @param CommandSender $sender
-     * @param string[]      $args = []
-     *
-     * @return bool
+     * @param string[] $args
      */
     public abstract function execute(CommandSender $sender, array $args = []) : bool;
 
-    /** @return string */
     public abstract function getLabel() : string;
 }

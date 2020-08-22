@@ -33,13 +33,6 @@ use pocketmine\level\Level as World;
 use pocketmine\Server;
 
 class WorldArgumentValidator implements ArgumentValidator{
-    /**
-     * @param string $argument
-     *
-     * @return World
-     *
-     * @throw \Exception
-     */
     public static function validate(string $argument) : World{
         $world = Server::getInstance()->getLevelByName($argument);
         if($world === null)

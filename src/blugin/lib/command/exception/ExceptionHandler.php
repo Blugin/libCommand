@@ -35,7 +35,7 @@ use blugin\lib\command\exception\defaults\GenericInvalidWorldException;
 use blugin\lib\command\exception\defaults\GenericNumberTooBigException;
 use blugin\lib\command\exception\defaults\GenericNumberTooSmallException;
 use blugin\lib\command\exception\defaults\ArgumentLackException;
-use blugin\lib\command\MainCommand;
+use blugin\lib\command\BaseCommand;
 use blugin\lib\command\Subcommand;
 use DaveRandom\CallbackValidator\BuiltInTypes;
 use DaveRandom\CallbackValidator\CallbackType;
@@ -45,34 +45,26 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\Utils;
 
 class ExceptionHandler{
-    /** @var MainCommand */
+    /** @var BaseCommand */
     private $mainCommand;
 
     /** @var \Closure[] exception class => handler */
     private $handlers = [];
 
-    /** @param MainCommand $mainCommand */
-    public function __construct(MainCommand $mainCommand){
+    public function __construct(BaseCommand $mainCommand){
         $this->mainCommand = $mainCommand;
 
         //Register default handlers
         $this->register(ArgumentLackException::class);
-        $this->register(GenericInvalidBlockException::class);;
-        $this->register(GenericInvalidItemException::class);;
+        $this->register(GenericInvalidBlockException::class);
+        $this->register(GenericInvalidItemException::class);
         $this->register(GenericInvalidNumberException::class);
-        $this->register(GenericInvalidPlayerException::class);;
+        $this->register(GenericInvalidPlayerException::class);
         $this->register(GenericInvalidWorldException::class);
         $this->register(GenericNumberTooBigException::class);
         $this->register(GenericNumberTooSmallException::class);
     }
 
-    /**
-     * @param \Exception    $exception
-     * @param CommandSender $sender
-     * @param Subcommand    $subcommand
-     *
-     * @return bool
-     */
     public function handle(\Exception $exception, CommandSender $sender, Subcommand $subcommand) : bool{
         $className = get_class($exception);
         if(!isset($this->handlers[$className]))
@@ -83,7 +75,6 @@ class ExceptionHandler{
     }
 
     /**
-     * @param string        $className
      * @param null|\Closure $handlerFunc \Closure(\Exception $e, CommandSender $sender, Subcommand $subcommand, MainCommand $command)
      */
     public function register(string $className, ?\Closure $handlerFunc = null) : void{
@@ -101,7 +92,7 @@ class ExceptionHandler{
             new ParameterType("e", \Exception::class, ParameterType::COVARIANT),
             new ParameterType("sender", CommandSender::class),
             new ParameterType("subcommand", Subcommand::class,ParameterType::COVARIANT | ParameterType::OPTIONAL),
-            new ParameterType("command", MainCommand::class,  ParameterType::COVARIANT | ParameterType::OPTIONAL)
+            new ParameterType("command", BaseCommand::class,  ParameterType::COVARIANT | ParameterType::OPTIONAL)
         );
         if(!$sig->isSatisfiedBy($handlerFunc)){
             throw new \TypeError("Declaration of callable `" . CallbackType::createFromCallable($handlerFunc) . "` must be compatible with `" . $sig . "`");

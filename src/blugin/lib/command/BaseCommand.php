@@ -35,7 +35,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 
-class MainCommand extends Command implements CommandExecutor{
+class BaseCommand extends Command implements CommandExecutor{
     /** @var PluginBase */
     private $owningPlugin;
 
@@ -45,10 +45,6 @@ class MainCommand extends Command implements CommandExecutor{
     /** @var ExceptionHandler */
     private $exceptionHandler;
 
-    /**
-     * @param string     $name
-     * @param PluginBase $owner
-     */
     public function __construct(string $name, PluginBase $owner){
         parent::__construct($name);
         $this->owningPlugin = $owner;
@@ -61,29 +57,10 @@ class MainCommand extends Command implements CommandExecutor{
         }
     }
 
-    /**
-     * @param CommandSender $sender
-     * @param string        $commandLabel
-     * @param string[]      $args
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
     public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
         return $this->owningPlugin->isEnabled() && $this->testPermission($sender) && $this->onCommand($sender, $this, $commandLabel, $args);
     }
 
-    /**
-     * @param CommandSender $sender
-     * @param Command       $command
-     * @param string        $label
-     * @param string[]      $args
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
         $label = array_shift($args) ?? "";
         foreach($this->subcommands as $key => $subcommand){
@@ -103,10 +80,6 @@ class MainCommand extends Command implements CommandExecutor{
 
     /**
      * Override for display different usage messages depending on player permissions
-     *
-     * @param CommandSender|null $sender
-     *
-     * @return string
      */
     public function getUsage(CommandSender $sender = null) : string{
         if($sender === null || !$this->owningPlugin instanceof TranslatorHolder)
@@ -122,13 +95,6 @@ class MainCommand extends Command implements CommandExecutor{
         return $this->getMessage($sender, "commands.$label.usage", [implode(" | ", $subCommands)]);
     }
 
-    /**
-     * @param CommandSender          $sender
-     * @param string                 $str
-     * @param float[]|int[]|string[] $params
-     *
-     * @return string
-     */
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
         if($this->owningPlugin instanceof TranslatorHolder){
             return $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
@@ -137,11 +103,6 @@ class MainCommand extends Command implements CommandExecutor{
         return Server::getInstance()->getLanguage()->translateString($str, $params);
     }
 
-    /**
-     * @param CommandSender          $sender
-     * @param string                 $str
-     * @param float[]|int[]|string[] $params
-     */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
         $sender->sendMessage($this->getMessage($sender, $str, $params));
     }
@@ -151,16 +112,10 @@ class MainCommand extends Command implements CommandExecutor{
         return $this->subcommands;
     }
 
-    /** @param Subcommand $subcommand */
     public function registerSubcommand(Subcommand $subcommand) : void{
         $this->subcommands[$subcommand->getLabel()] = $subcommand;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return bool
-     */
     public function unregisterSubcommand(string $label) : bool{
         if(isset($this->subcommands[$label])){
             unset($this->subcommands[$label]);
@@ -169,7 +124,6 @@ class MainCommand extends Command implements CommandExecutor{
         return false;
     }
 
-    /** @return ExceptionHandler */
     public function getExceptionHandler() : ExceptionHandler{
         return $this->exceptionHandler;
     }

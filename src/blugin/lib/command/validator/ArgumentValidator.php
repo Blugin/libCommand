@@ -28,12 +28,5 @@ declare(strict_types=1);
 namespace blugin\lib\command\validator;
 
 interface ArgumentValidator{
-    /**
-     * @param string $argument
-     *
-     * @retrun mixed
-     *
-     * @throw \Exception
-     */
     public static function validate(string $argument);
 }

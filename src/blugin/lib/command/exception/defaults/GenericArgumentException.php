@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\exception\defaults;
 
 use blugin\lib\command\exception\IHandleable;
-use blugin\lib\command\MainCommand;
+use blugin\lib\command\BaseCommand;
 use blugin\lib\command\Subcommand;
 use pocketmine\command\CommandSender;
 
@@ -36,20 +36,21 @@ abstract class GenericArgumentException extends \InvalidArgumentException implem
     const LABEL = "";
 
     public static function getHandler() : \Closure{
-        return function(GenericArgumentException $e, CommandSender $sender, Subcommand $subcommand, MainCommand $mainCommand) : void{
+        return function(GenericArgumentException $e, CommandSender $sender, Subcommand $subcommand, BaseCommand $mainCommand) : void{
             $mainCommand->sendMessage($sender, "commands.generic." . $e::LABEL, $e->getArgs());
         };
     }
 
+    /** @var string[] */
     protected $args = [];
 
-    /** @param float|int|string ...$args */
+    /** @param string ...$args */
     public function __construct(...$args){
         parent::__construct("generic argument exception");
         $this->args = $args;
     }
 
-    /** @return float[]|int[]|string[] */
+    /** @return string[] */
     public function getArgs() : array{
         return $this->args;
     }
