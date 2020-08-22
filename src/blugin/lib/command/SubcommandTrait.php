@@ -37,11 +37,6 @@ trait SubcommandTrait{
     /** @var BaseCommand */
     private $baseCommand;
 
-    /**
-     * @param string|null $label
-     *
-     * @return BaseCommand
-     */
     public function getBaseCommand(?string $label = null) : BaseCommand{
         if($this->baseCommand === null){
             $this->baseCommand = $this->createCommand($label);
@@ -50,13 +45,6 @@ trait SubcommandTrait{
         return $this->baseCommand;
     }
 
-    /**
-     * Create command
-     *
-     * @param string|null $label
-     *
-     * @return BaseCommand
-     */
     public function createCommand(?string $label = null) : BaseCommand{
         $label = trim(strtolower($label ?? $this->getName()));
         /** @noinspection PhpParamsInspection */

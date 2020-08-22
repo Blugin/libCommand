@@ -33,13 +33,6 @@ use pocketmine\item\Item;
 use pocketmine\item\LegacyStringToItemParser;
 
 class ItemArgumentValidator implements ArgumentValidator{
-    /**
-     * @param string $argument
-     *
-     * @return Item
-     *
-     * @throw \Exception
-     */
     public static function validate(string $argument) : Item{
         try{
             return LegacyStringToItemParser::getInstance()->parse($argument);

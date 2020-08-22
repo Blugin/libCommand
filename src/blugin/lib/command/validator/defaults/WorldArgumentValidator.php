@@ -33,13 +33,6 @@ use pocketmine\Server;
 use pocketmine\world\World;
 
 class WorldArgumentValidator implements ArgumentValidator{
-    /**
-     * @param string $argument
-     *
-     * @return World
-     *
-     * @throw \Exception
-     */
     public static function validate(string $argument) : World{
         $world = Server::getInstance()->getWorldManager()->getWorldByName($argument);
         if($world === null)

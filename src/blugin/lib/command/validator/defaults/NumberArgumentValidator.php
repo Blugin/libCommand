@@ -33,13 +33,6 @@ use blugin\lib\command\exception\defaults\GenericNumberTooSmallException;
 use blugin\lib\command\validator\ArgumentValidator;
 
 class NumberArgumentValidator implements ArgumentValidator{
-    /**
-     * @param string $argument
-     *
-     * @return float
-     *
-     * @throw \Exception
-     */
     public static function validate(string $argument) : float{
         if(!is_numeric($argument))
             throw new GenericInvalidNumberException($argument);
@@ -47,14 +40,6 @@ class NumberArgumentValidator implements ArgumentValidator{
         return (float) $argument;
     }
 
-    /**
-     * @param string $argument
-     * @param float  $min
-     *
-     * @return float
-     *
-     * @throw \Exception
-     */
     public static function validateMin(string $argument, float $min) : float{
         $num = self::validate($argument);
         if($min !== null && $num < $min)
@@ -62,14 +47,6 @@ class NumberArgumentValidator implements ArgumentValidator{
         return $num;
     }
 
-    /**
-     * @param string $argument
-     * @param float  $max
-     *
-     * @return float
-     *
-     * @throw \Exception
-     */
     public static function validateMax(string $argument, float $max) : float{
         $num = self::validate($argument);
         if($max !== null && $num > $max)
@@ -77,15 +54,6 @@ class NumberArgumentValidator implements ArgumentValidator{
         return $num;
     }
 
-    /**
-     * @param string $argument
-     * @param float  $min
-     * @param float  $max
-     *
-     * @return float
-     *
-     * @throw \Exception
-     */
     public static function validateRange(string $argument, float $min, float $max) : float{
         self::validateMin($argument, $min);
         return self::validateMax($argument, $max);

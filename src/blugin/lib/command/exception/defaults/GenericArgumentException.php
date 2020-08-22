@@ -41,15 +41,16 @@ abstract class GenericArgumentException extends \InvalidArgumentException implem
         };
     }
 
+    /** @var string[] */
     protected $args = [];
 
-    /** @param float|int|string ...$args */
+    /** @param string ...$args */
     public function __construct(...$args){
         parent::__construct("generic argument exception");
         $this->args = $args;
     }
 
-    /** @return float[]|int[]|string[] */
+    /** @return string[] */
     public function getArgs() : array{
         return $this->args;
     }

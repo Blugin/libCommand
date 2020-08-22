@@ -51,28 +51,20 @@ class ExceptionHandler{
     /** @var \Closure[] exception class => handler */
     private $handlers = [];
 
-    /** @param BaseCommand $mainCommand */
     public function __construct(BaseCommand $mainCommand){
         $this->mainCommand = $mainCommand;
 
         //Register default handlers
         $this->register(ArgumentLackException::class);
-        $this->register(GenericInvalidBlockException::class);;
-        $this->register(GenericInvalidItemException::class);;
+        $this->register(GenericInvalidBlockException::class);
+        $this->register(GenericInvalidItemException::class);
         $this->register(GenericInvalidNumberException::class);
-        $this->register(GenericInvalidPlayerException::class);;
+        $this->register(GenericInvalidPlayerException::class);
         $this->register(GenericInvalidWorldException::class);
         $this->register(GenericNumberTooBigException::class);
         $this->register(GenericNumberTooSmallException::class);
     }
 
-    /**
-     * @param \Exception    $exception
-     * @param CommandSender $sender
-     * @param Subcommand    $subcommand
-     *
-     * @return bool
-     */
     public function handle(\Exception $exception, CommandSender $sender, Subcommand $subcommand) : bool{
         $className = get_class($exception);
         if(!isset($this->handlers[$className]))
@@ -83,7 +75,6 @@ class ExceptionHandler{
     }
 
     /**
-     * @param string        $className
      * @param null|\Closure $handlerFunc \Closure(\Exception $e, CommandSender $sender, Subcommand $subcommand, MainCommand $command)
      */
     public function register(string $className, ?\Closure $handlerFunc = null) : void{
