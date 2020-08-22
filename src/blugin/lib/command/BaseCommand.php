@@ -37,7 +37,7 @@ use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\Server;
 
-class MainCommand extends Command implements PluginOwned, CommandExecutor{
+class BaseCommand extends Command implements PluginOwned, CommandExecutor{
     use PluginOwnedTrait;
 
     /** @var Subcommand[] */

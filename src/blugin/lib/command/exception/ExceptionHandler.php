@@ -35,7 +35,7 @@ use blugin\lib\command\exception\defaults\GenericInvalidWorldException;
 use blugin\lib\command\exception\defaults\GenericNumberTooBigException;
 use blugin\lib\command\exception\defaults\GenericNumberTooSmallException;
 use blugin\lib\command\exception\defaults\ArgumentLackException;
-use blugin\lib\command\MainCommand;
+use blugin\lib\command\BaseCommand;
 use blugin\lib\command\Subcommand;
 use DaveRandom\CallbackValidator\BuiltInTypes;
 use DaveRandom\CallbackValidator\CallbackType;
@@ -45,14 +45,14 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\Utils;
 
 class ExceptionHandler{
-    /** @var MainCommand */
+    /** @var BaseCommand */
     private $mainCommand;
 
     /** @var \Closure[] exception class => handler */
     private $handlers = [];
 
-    /** @param MainCommand $mainCommand */
-    public function __construct(MainCommand $mainCommand){
+    /** @param BaseCommand $mainCommand */
+    public function __construct(BaseCommand $mainCommand){
         $this->mainCommand = $mainCommand;
 
         //Register default handlers
@@ -101,7 +101,7 @@ class ExceptionHandler{
             new ParameterType("e", \Exception::class, ParameterType::COVARIANT),
             new ParameterType("sender", CommandSender::class),
             new ParameterType("subcommand", Subcommand::class,ParameterType::COVARIANT | ParameterType::OPTIONAL),
-            new ParameterType("command", MainCommand::class,  ParameterType::COVARIANT | ParameterType::OPTIONAL)
+            new ParameterType("command", BaseCommand::class,  ParameterType::COVARIANT | ParameterType::OPTIONAL)
         );
         if(!$sig->isSatisfiedBy($handlerFunc)){
             throw new \TypeError("Declaration of callable `" . CallbackType::createFromCallable($handlerFunc) . "` must be compatible with `" . $sig . "`");

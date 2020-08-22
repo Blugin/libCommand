@@ -34,20 +34,20 @@ use pocketmine\plugin\PluginBase;
  * This trait override most methods in the {@link PluginBase} abstract class.
  */
 trait SubcommandTrait{
-    /** @var MainCommand */
-    private $mainCommand;
+    /** @var BaseCommand */
+    private $baseCommand;
 
     /**
      * @param string|null $label
      *
-     * @return MainCommand
+     * @return BaseCommand
      */
-    public function getMainCommand(?string $label = null) : MainCommand{
-        if($this->mainCommand === null){
-            $this->mainCommand = $this->createCommand($label);
+    public function getBaseCommand(?string $label = null) : BaseCommand{
+        if($this->baseCommand === null){
+            $this->baseCommand = $this->createCommand($label);
         }
 
-        return $this->mainCommand;
+        return $this->baseCommand;
     }
 
     /**
@@ -55,12 +55,12 @@ trait SubcommandTrait{
      *
      * @param string|null $label
      *
-     * @return MainCommand
+     * @return BaseCommand
      */
-    public function createCommand(?string $label = null) : MainCommand{
+    public function createCommand(?string $label = null) : BaseCommand{
         $label = trim(strtolower($label ?? $this->getName()));
         /** @noinspection PhpParamsInspection */
-        $command = new MainCommand($label, $this);
+        $command = new BaseCommand($label, $this);
         $command->setPermission("$label.cmd");
         $command->setAliases($this->getConfig()->getNested("command.aliases", []));
 
@@ -73,9 +73,9 @@ trait SubcommandTrait{
 
         $defaultValue = $config->getNested("command.permission");
         if($defaultValue !== null){
-            $permissionManager->getPermission($this->mainCommand->getPermission())->setDefault($defaultValue);
+            $permissionManager->getPermission($this->baseCommand->getPermission())->setDefault($defaultValue);
         }
-        foreach($this->mainCommand->getSubcommands() as $key => $subcommand){
+        foreach($this->baseCommand->getSubcommands() as $key => $subcommand){
             $label = $subcommand->getLabel();
             $defaultValue = $config->getNested("command.children.$label.permission");
             if($defaultValue !== null){
@@ -85,14 +85,14 @@ trait SubcommandTrait{
     }
 
     public function onLoad() : void{
-        $this->getMainCommand();
+        $this->getBaseCommand();
     }
 
     public function onEnable() : void{
-        $this->getServer()->getCommandMap()->register($this->getName(), $this->getMainCommand());
+        $this->getServer()->getCommandMap()->register($this->getName(), $this->getBaseCommand());
     }
 
     public function onDisble() : void{
-        $this->getServer()->getCommandMap()->unregister($this->getMainCommand());
+        $this->getServer()->getCommandMap()->unregister($this->getBaseCommand());
     }
 }

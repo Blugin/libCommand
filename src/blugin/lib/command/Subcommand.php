@@ -35,8 +35,8 @@ use pocketmine\permission\PermissionManager;
 use pocketmine\utils\TextFormat;
 
 abstract class Subcommand{
-    /** @var MainCommand */
-    private $mainCommand;
+    /** @var BaseCommand */
+    private $baseCommand;
 
     /** @var string */
     private $name;
@@ -45,20 +45,20 @@ abstract class Subcommand{
     private $aliases;
 
     /**
-     * @param MainCommand $mainCommand
+     * @param BaseCommand $baseCommand
      * @param null|string $name = null
      * @param null|array  $aliases = null
      */
-    public function __construct(MainCommand $mainCommand, ?string $name = null, ?array $aliases = null){
-        $this->mainCommand = $mainCommand;
+    public function __construct(BaseCommand $baseCommand, ?string $name = null, ?array $aliases = null){
+        $this->baseCommand = $baseCommand;
 
         $label = $this->getLabel();
-        $config = $mainCommand->getOwningPlugin()->getConfig();
+        $config = $baseCommand->getOwningPlugin()->getConfig();
         $this->name = $name ?? $config->getNested("command.children.$label.name", $label);
         $this->aliases = $aliases ?? $config->getNested("command.children.$label.aliases", []);
 
         $permissionManager = PermissionManager::getInstance();
-        $permissionManager->addPermission(new Permission($this->getPermission(), $this->mainCommand->getUsage(), $permissionManager->getPermission($mainCommand->getPermission())->getDefault()));
+        $permissionManager->addPermission(new Permission($this->getPermission(), $this->baseCommand->getUsage(), $permissionManager->getPermission($baseCommand->getPermission())->getDefault()));
     }
 
     /**
@@ -80,7 +80,7 @@ abstract class Subcommand{
      * @param float[]|int[]|string[] $params
      */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
-        $sender->sendMessage($this->getMainCommand()->getMessage($sender, $this->getFullMessage($str), $params));
+        $sender->sendMessage($this->getBaseCommand()->getMessage($sender, $this->getFullMessage($str), $params));
     }
 
     /**
@@ -92,7 +92,7 @@ abstract class Subcommand{
         if($this->testPermissionSilent($sender))
             return true;
 
-        $this->mainCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
+        $this->baseCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
         return false;
     }
 
@@ -114,9 +114,9 @@ abstract class Subcommand{
         return strcasecmp($label, $this->name) === 0 || in_array($label, $this->aliases);
     }
 
-    /** @return MainCommand */
-    public function getMainCommand() : MainCommand{
-        return $this->mainCommand;
+    /** @return BaseCommand */
+    public function getBaseCommand() : BaseCommand{
+        return $this->baseCommand;
     }
 
     /** @return string */
@@ -141,7 +141,7 @@ abstract class Subcommand{
 
     /** @return string */
     public function getPermission() : string{
-        return $this->mainCommand->getPermission() . "." . $this->getLabel();
+        return $this->baseCommand->getPermission() . "." . $this->getLabel();
     }
 
     /**
@@ -150,7 +150,7 @@ abstract class Subcommand{
      * @return string
      */
     public function getUsage(CommandSender $sender = null) : string{
-        $plugin = $this->mainCommand->getOwningPlugin();
+        $plugin = $this->baseCommand->getOwningPlugin();
         if($plugin instanceof TranslatorHolder){
             return $plugin->getTranslator()->translateTo($this->getFullMessage("usage"), [], $sender);
         }
@@ -163,7 +163,7 @@ abstract class Subcommand{
      * @return string
      */
     public function getFullMessage(string $str) : string{
-        $label = strtolower($this->mainCommand->getName());
+        $label = strtolower($this->baseCommand->getName());
         return "commands.$label.{$this->getLabel()}.$str";
     }
 
