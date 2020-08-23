@@ -30,7 +30,7 @@ use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 
 class BooleanParameter extends EnumParameter{
     public function getTypeName() : string{
-        return "bool";
+        return "Boolean";
     }
 
     public function prepare() : Parameter{
