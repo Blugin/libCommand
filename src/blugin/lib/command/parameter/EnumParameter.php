@@ -34,6 +34,10 @@ abstract class EnumParameter extends Parameter{
     /** @var bool Whether to check case */
     protected $caseSensitive = false;
 
+    public function getType() : int{
+        return -1;
+    }
+
     /**
      * @return string|null
      */
