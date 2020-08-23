@@ -41,9 +41,9 @@ class JsonParameter extends TextParameter{
         return preg_match("/^{([.]*)}$/", $argument);
     }
 
+    /** @return mixed[]|null the parsed json array */
     public function parseSilent(CommandSender $sender, string $argument){
-        $result = parent::parseSilent($sender, $argument);
-        $data = $result === null ? null : json_decode($result);
-        return $data === null || !is_array($result) ? null : $data;
+        $data = json_decode($argument, true);
+        return $data === null || !is_array($data) ? null : $data;
     }
 }
