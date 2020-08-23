@@ -29,11 +29,15 @@ use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 
 class ParameterLine{
-    public const ERROR_PARAMETER_INSUFFICIENT = -1;
-    public const ERROR_PARAMETER_INVALID = -2;
+    public const ERROR_NAME_MISMATCH = -1;
+    public const ERROR_PARAMETER_INSUFFICIENT = -2;
+    public const ERROR_PARAMETER_INVALID = -3;
 
     /** @var BaseCommand */
     protected $baseCommand;
+
+    /** @var string|null */
+    protected $name;
 
     /** @var Parameter[] */
     protected $parameters = [];
@@ -41,8 +45,9 @@ class ParameterLine{
     /** @var int */
     protected $requireLength = 0;
 
-    public function __construct(BaseCommand $baseCommand){
+    public function __construct(BaseCommand $baseCommand, ?string $name = null){
         $this->baseCommand = $baseCommand;
+        $this->name = $name;
     }
 
     public function getBaseCommand() : BaseCommand{
@@ -52,6 +57,15 @@ class ParameterLine{
     /**
      * @return Parameter[]
      */
+    public function getName() : ?string{
+        return $this->name;
+    }
+
+    public function setName(?string $name) : ParameterLine{
+        $this->name = $name;
+        return $this;
+    }
+
     public function getParameters() : array{
         return $this->parameters;
     }
@@ -87,6 +101,11 @@ class ParameterLine{
      * @param string[] $args
      */
     public function valid(CommandSender $sender, array $args) : bool{
+        if($this->name !== null){
+            if(strcasecmp($this->name, array_pop($args)) !== 0)
+                return false;
+        }
+
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
         if($argsCount < $requireCount)
@@ -112,6 +131,11 @@ class ParameterLine{
      * @return mixed[]|int name => value. if parse failed return int
      */
     public function parse(CommandSender $sender, array $args){
+        if($this->name !== null){
+            if(strcasecmp($this->name, array_pop($args)) !== 0)
+                return self::ERROR_NAME_MISMATCH;
+        }
+
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
         if($argsCount < $requireCount)
