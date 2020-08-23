@@ -48,9 +48,8 @@ class Vector3Parameter extends Parameter{
         return $this;
     }
 
-    /** @param string[] $args the remained parameters */
     public function valid(CommandSender $sender, string $argument) : bool{
-        $pattern = "^" . ($sender instanceof Player ? "(~|~\+)?" : "") . "-?(\d+|\d*\.\d+)$";
+        $pattern = "/^" . ($sender instanceof Player ? "(~|~\+)?" : "") . "-?(\d+|\d*\.\d+)$/";
         foreach(explode(" ", $argument) as $coord){
             if(!preg_match($pattern, $coord))
                 return false;
