@@ -61,7 +61,16 @@ class ParameterLine{
 
     /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
-        $this->getBaseCommand()->sendMessage($sender, $str, $params);
+        $this->getBaseCommand()->sendMessage($sender, $this->getFullMessage($str), $params);
+    }
+
+    public function getFullMessage(string $str) : string{
+        if($this->name === null)
+            return $str;
+
+        $baseLabel = strtolower($this->baseCommand->getName());
+        $label = strtolower($this->getName());
+        return "commands.$baseLabel.$label.$str";
     }
 
     public function getName() : ?string{
