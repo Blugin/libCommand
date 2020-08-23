@@ -41,6 +41,9 @@ class ParameterLine{
     /** @var string|null */
     protected $name;
 
+    /** @var string[] */
+    private $aliases;
+
     /** @var Parameter[] */
     protected $parameters = [];
 
@@ -62,6 +65,33 @@ class ParameterLine{
 
     public function setName(?string $name) : ParameterLine{
         $this->name = $name;
+        return $this;
+    }
+
+    /** @param string[] $args */
+    public function testName(array &$args) : bool{
+        if($this->name === null)
+            return true;
+
+        $name = array_pop($args);
+        if(strcasecmp($this->name, $name) === 0)
+            return true;
+
+        foreach($this->aliases as $alias){
+            if(strcasecmp($alias, $name) === 0)
+                return true;
+        }
+        return false;
+    }
+
+    /** @return string[] */
+    public function getAliases() : array{
+        return $this->aliases;
+    }
+
+    /** @param string[] $aliases */
+    public function setAliases(array $aliases) : ParameterLine{
+        $this->aliases = $aliases;
         return $this;
     }
 
@@ -123,10 +153,8 @@ class ParameterLine{
 
     /** @param string[] $args */
     public function valid(CommandSender $sender, array $args) : bool{
-        if($this->name !== null){
-            if(strcasecmp($this->name, array_pop($args)) !== 0)
-                return false;
-        }
+        if(!$this->testName($args))
+            return false;
 
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
@@ -153,10 +181,8 @@ class ParameterLine{
      * @return mixed[]|int name => value. if parse failed return int
      */
     public function parse(CommandSender $sender, array $args){
-        if($this->name !== null){
-            if(strcasecmp($this->name, array_pop($args)) !== 0)
-                return self::ERROR_NAME_MISMATCH;
-        }
+        if(!$this->testName($args))
+            return self::ERROR_NAME_MISMATCH;
 
         if(!$this->testPermission($sender))
             return self::ERROR_PERMISSION_DENIED;
