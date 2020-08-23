@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
-use blugin\lib\command\exception\ExceptionHandler;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
@@ -40,62 +39,61 @@ use pocketmine\Server;
 class BaseCommand extends Command implements PluginOwned, CommandExecutor{
     use PluginOwnedTrait;
 
-    /** @var Subcommand[] */
-    private $subcommands = [];
-
-    /** @var ExceptionHandler */
-    private $exceptionHandler;
+    /** @var ParameterLine[] */
+    private $parameterLines = [];
 
     public function __construct(string $name, PluginBase $owner){
         parent::__construct($name);
         $this->owningPlugin = $owner;
-        $this->exceptionHandler = new ExceptionHandler($this);
 
         if($owner instanceof TranslatorHolder){
             $label = strtolower($owner->getName());
-            $this->setUsage($owner->getTranslator()->translate("commands.$label.usage"));
             $this->setDescription($owner->getTranslator()->translate("commands.$label.description"));
         }
     }
 
     /** @param string[] $args */
     public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
-        return $this->owningPlugin->isEnabled() && $this->testPermission($sender) && $this->onCommand($sender, $this, $commandLabel, $args);
+        if(!$this->owningPlugin->isEnabled() || !$this->testPermission($sender))
+            return false;
+
+        if(empty($this->parameterLines)){
+            return false;
+        }
+
+        return $this->onCommand($sender, $this, $commandLabel, $args);
     }
 
     /** @param string[] $args */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
-        $label = array_shift($args) ?? "";
-        foreach($this->subcommands as $key => $subcommand){
-            if($subcommand->checkLabel($label)){
-                try{
-                    $subcommand->handle($sender, $args);
-                }catch(\Exception $e){
-                    if(!$this->exceptionHandler->handle($e, $sender, $subcommand))
-                        throw $e;
-                }
+        foreach($this->parameterLines as $key => $parameterLine){
+            if($parameterLine->valid($sender, $args)){
+                $result = $parameterLine->parse($sender, $args);
+                $this->onCompletion($sender, $result);
                 return true;
             }
         }
-        $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage($sender)]));
+        $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage()]));
         return true;
     }
 
-    /**
-     * Override for display different usage messages depending on player permissions
-     */
-    public function getUsage(CommandSender $sender = null) : string{
-        if($sender === null || !$this->owningPlugin instanceof TranslatorHolder)
-            return $this->usageMessage;
+    /** @param mixed[] $args name => value */
+    public function onCompletion(CommandSender $sender, array $args) : bool{
+    }
 
-        $subCommands = [];
-        foreach($this->subcommands as $key => $subCommand){
-            if($subCommand->testPermissionSilent($sender)){
-                $subCommands[] = $subCommand->getName();
-            }
-        }
-        $label = strtolower($this->getName());
-        return $this->getMessage($sender, "commands.$label.usage", [implode(" | ", $subCommands)]);
+    public function getUsage() : string{
+        $usage = "/{$this->getName()}";
+
+        $count = count($this->parameterLines);
+        if($count === 0)
+            return $usage;
+
+        if($count === 1)
+            return "$usage {$this->parameterLines[0]->toUsageString()}";
+
+        return "$usage <" . implode(" | ", array_map(function(ParameterLine $parameterLine) : string{
+                return $parameterLine->getName() ?? $parameterLine->toUsageString();
+            }, $this->parameterLines)) . ">";
     }
 
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
@@ -111,24 +109,12 @@ class BaseCommand extends Command implements PluginOwned, CommandExecutor{
         $sender->sendMessage($this->getMessage($sender, $str, $params));
     }
 
-    /** @return Subcommand[] */
-    public function getSubcommands() : array{
-        return $this->subcommands;
+    /** @return ParameterLine[] */
+    public function getParameterLines() : array{
+        return $this->parameterLines;
     }
 
-    public function registerSubcommand(Subcommand $subcommand) : void{
-        $this->subcommands[$subcommand->getLabel()] = $subcommand;
-    }
-
-    public function unregisterSubcommand(string $label) : bool{
-        if(isset($this->subcommands[$label])){
-            unset($this->subcommands[$label]);
-            return true;
-        }
-        return false;
-    }
-
-    public function getExceptionHandler() : ExceptionHandler{
-        return $this->exceptionHandler;
+    public function addParameterLine(ParameterLine $parameterLine) : void{
+        $this->parameterLines[] = $parameterLine;
     }
 }
