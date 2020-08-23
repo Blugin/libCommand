@@ -70,7 +70,8 @@ class PlayerParameter extends EnumParameter{
         return $this->includeOffline;
     }
 
-    public function setIncludeOffline(bool $includeOffline) : void{
+    public function setIncludeOffline(bool $includeOffline) : PlayerParameter{
         $this->includeOffline = $includeOffline;
+        return $this;
     }
 }

@@ -89,7 +89,8 @@ class Vector3Parameter extends Parameter{
         return $this->isFloor;
     }
 
-    public function setFloor(bool $isFloor) : void{
+    public function setFloor(bool $isFloor) : Vector3Parameter{
         $this->isFloor = $isFloor;
+        return $this;
     }
 }
