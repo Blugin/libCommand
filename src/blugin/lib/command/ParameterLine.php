@@ -26,8 +26,12 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\parameter\Parameter;
+use pocketmine\command\CommandSender;
 
 class ParameterLine{
+    public const ERROR_PARAMETER_INSUFFICIENT = -1;
+    public const ERROR_PARAMETER_INVALID = -2;
+
     /** @var BaseCommand */
     protected $baseCommand;
 
@@ -77,5 +81,56 @@ class ParameterLine{
 
     public function getRequireLength() : int{
         return $this->requireLength;
+    }
+
+    /**
+     * @param string[] $args
+     */
+    public function valid(CommandSender $sender, array $args) : bool{
+        $requireCount = $this->getRequireLength();
+        $argsCount = count($args);
+        if($argsCount < $requireCount)
+            return false;
+
+        $offset = 0;
+        foreach($this->parameters as $parameter){
+            if($offset > $argsCount)
+                break;
+
+            $argument = implode(" ", array_slice($args, $offset, $parameter->getLength()));
+            if($parameter->valid($sender, $argument))
+                return false;
+
+            $offset += $parameter->getLength();
+        }
+        return true;
+    }
+
+    /**
+     * @param string[] $args
+     *
+     * @return mixed[]|int name => value. if parse failed return int
+     */
+    public function parse(CommandSender $sender, array $args){
+        $requireCount = $this->getRequireLength();
+        $argsCount = count($args);
+        if($argsCount < $requireCount)
+            return self::ERROR_PARAMETER_INSUFFICIENT;
+
+        $offset = 0;
+        $results = [];
+        foreach($this->parameters as $parameter){
+            if($offset > $argsCount)
+                break;
+
+            $argument = implode(" ", array_slice($args, $offset, $parameter->getLength()));
+            $result = $parameter->parse($sender, $argument);
+            if($result === null)
+                return self::ERROR_PARAMETER_INVALID;
+
+            $offset += $parameter->getLength();
+            $results[$parameter->getName()] = $result;
+        }
+        return $results;
     }
 }
