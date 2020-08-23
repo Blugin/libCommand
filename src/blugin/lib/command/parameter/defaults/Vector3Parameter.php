@@ -29,6 +29,7 @@ use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+use pocketmine\player\Player;
 
 class Vector3Parameter extends Parameter{
     /** @var bool Whether to rounding down the coordinates */
@@ -51,7 +52,7 @@ class Vector3Parameter extends Parameter{
      * @param string[] $args the remained parameters
      */
     public function valid(CommandSender $sender, string $argument) : bool{
-        $pattern = "^" . ($sender instanceof Vector3 ? "(~|~\+)?" : "") . "-?(\d+|\d*\.\d+)$";
+        $pattern = "^" . ($sender instanceof Player ? "(~|~\+)?" : "") . "-?(\d+|\d*\.\d+)$";
         foreach(explode(" ", $argument) as $coord){
             if(!preg_match($pattern, $coord))
                 return false;
@@ -73,8 +74,9 @@ class Vector3Parameter extends Parameter{
             "z" => $argument[2]
         ];
         foreach($coords as $coordName => &$coord){
-            if($sender instanceof Vector3 && strpos($coord, "~") === 0){
-                $coord = $sender->{$coordName} + (float) substr($coord, 1);
+            if($sender instanceof Player && strpos($coord, "~") === 0){
+                /** @var Player $sender */
+                $coord = $sender->getLocation()->{$coordName} + (float) substr($coord, 1);
             }else{
                 $coord = (float) $coord;
             }
