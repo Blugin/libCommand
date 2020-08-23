@@ -59,6 +59,11 @@ class ParameterLine{
         return $this->baseCommand;
     }
 
+    /** @param string[] $params */
+    public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
+        $this->getBaseCommand()->sendMessage($sender, $str, $params);
+    }
+
     public function getName() : ?string{
         return $this->name;
     }
