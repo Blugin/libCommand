@@ -31,7 +31,7 @@ use pocketmine\world\World;
 
 class WorldParameter extends StringParameter{
     public function getTypeName() : string{
-        return "item";
+        return "world";
     }
 
     /**
