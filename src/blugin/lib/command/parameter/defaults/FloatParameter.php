@@ -48,9 +48,7 @@ class FloatParameter extends Parameter{
         return null;
     }
 
-    /**
-     * @return float|null
-     */
+    /** @return float|null */
     public function parse(CommandSender $sender, string $argument){
         if(!is_numeric($argument)){
             $this->sendMessage($sender, "commands.generic.num.invalid", [$argument]);
@@ -71,9 +69,7 @@ class FloatParameter extends Parameter{
         return $num;
     }
 
-    /**
-     * @return float|null
-     */
+    /** @return float|null */
     public function parseSilent(CommandSender $sender, string $argument){
         if(!is_numeric($argument))
             return null;

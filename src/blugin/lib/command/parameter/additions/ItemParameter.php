@@ -44,9 +44,7 @@ class ItemParameter extends StringParameter{
         return "commands.give.item.notFound";
     }
 
-    /**
-     * @return Item|null
-     */
+    /** @return Item|null */
     public function parseSilent(CommandSender $sender, string $argument){
         try{
             return LegacyStringToItemParser::getInstance()->parse($argument);

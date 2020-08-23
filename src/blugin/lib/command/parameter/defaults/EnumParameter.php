@@ -39,9 +39,7 @@ abstract class EnumParameter extends Parameter{
         return -1;
     }
 
-    /**
-     * @return string|null
-     */
+    /** @return string|null */
     public function parseSilent(CommandSender $sender, string $argument){
         if($this->enum !== null){
             if($this->isExact()){

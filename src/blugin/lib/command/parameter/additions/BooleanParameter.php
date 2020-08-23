@@ -44,9 +44,7 @@ class BooleanParameter extends EnumParameter{
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
+    /** @return bool|null */
     public function parseSilent(CommandSender $sender, string $argument){
         $result = parent::parseSilent($sender, $argument);
         return $result === null ? null : $result === "true";

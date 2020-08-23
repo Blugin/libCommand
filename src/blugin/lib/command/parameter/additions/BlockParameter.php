@@ -44,9 +44,7 @@ class BlockParameter extends StringParameter{
         return "commands.give.block.notFound";
     }
 
-    /**
-     * @return Block|null
-     */
+    /** @return Block|null */
     public function parseSilent(CommandSender $sender, string $argument){
         try{
             $v = explode(":", $argument);

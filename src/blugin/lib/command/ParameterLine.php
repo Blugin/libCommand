@@ -54,9 +54,6 @@ class ParameterLine{
         return $this->baseCommand;
     }
 
-    /**
-     * @return Parameter[]
-     */
     public function getName() : ?string{
         return $this->name;
     }
@@ -66,6 +63,7 @@ class ParameterLine{
         return $this;
     }
 
+    /** @return Parameter[] */
     public function getParameters() : array{
         return $this->parameters;
     }
@@ -97,9 +95,7 @@ class ParameterLine{
         return $this->requireLength;
     }
 
-    /**
-     * @param string[] $args
-     */
+    /** @param string[] $args */
     public function valid(CommandSender $sender, array $args) : bool{
         if($this->name !== null){
             if(strcasecmp($this->name, array_pop($args)) !== 0)

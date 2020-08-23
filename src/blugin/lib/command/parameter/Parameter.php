@@ -61,9 +61,7 @@ abstract class Parameter extends CommandParameter{
         return $this->owningLine !== null ? $this->owningLine->getBaseCommand() : null;
     }
 
-    /**
-     * @param string[] $params
-     */
+    /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
         $this->getBaseCommand()->sendMessage($sender, $str, $params);
     }
@@ -138,9 +136,7 @@ abstract class Parameter extends CommandParameter{
         return $this->parseSilent($sender, $argument) !== null;
     }
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function parse(CommandSender $sender, string $argument){
         $result = $this->parseSilent($sender, $argument);
         if($result !== null)
@@ -153,9 +149,7 @@ abstract class Parameter extends CommandParameter{
         return null;
     }
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function parseSilent(CommandSender $sender, string $argument){
         return $argument;
     }

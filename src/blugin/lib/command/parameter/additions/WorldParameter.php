@@ -35,9 +35,7 @@ class WorldParameter extends StringParameter{
         return "world";
     }
 
-    /**
-     * @return World|null
-     */
+    /** @return World|null */
     public function parseSilent(CommandSender $sender, string $argument){
         return Server::getInstance()->getWorldManager()->getWorldByName($argument);
     }

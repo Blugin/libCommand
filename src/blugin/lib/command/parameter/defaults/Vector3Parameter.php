@@ -48,9 +48,7 @@ class Vector3Parameter extends Parameter{
         return $this;
     }
 
-    /**
-     * @param string[] $args the remained parameters
-     */
+    /** @param string[] $args the remained parameters */
     public function valid(CommandSender $sender, string $argument) : bool{
         $pattern = "^" . ($sender instanceof Player ? "(~|~\+)?" : "") . "-?(\d+|\d*\.\d+)$";
         foreach(explode(" ", $argument) as $coord){
@@ -60,9 +58,7 @@ class Vector3Parameter extends Parameter{
         return true;
     }
 
-    /**
-     * @return Vector3|null
-     */
+    /** @return Vector3|null */
     public function parseSilent(CommandSender $sender, string $argument){
         if(!$this->valid($sender, $argument))
             return null;

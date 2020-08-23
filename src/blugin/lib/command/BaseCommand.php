@@ -58,10 +58,12 @@ class BaseCommand extends Command implements PluginOwned, CommandExecutor{
         }
     }
 
+    /** @param string[] $args */
     public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
         return $this->owningPlugin->isEnabled() && $this->testPermission($sender) && $this->onCommand($sender, $this, $commandLabel, $args);
     }
 
+    /** @param string[] $args */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
         $label = array_shift($args) ?? "";
         foreach($this->subcommands as $key => $subcommand){
@@ -104,6 +106,7 @@ class BaseCommand extends Command implements PluginOwned, CommandExecutor{
         return Server::getInstance()->getLanguage()->translateString($str, $params);
     }
 
+    /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
         $sender->sendMessage($this->getMessage($sender, $str, $params));
     }
