@@ -23,21 +23,22 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\parameter;
+namespace blugin\lib\command\parameter\additions;
 
-use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+use blugin\lib\command\parameter\defaults\StringParameter;
+use pocketmine\command\CommandSender;
+use pocketmine\Server;
+use pocketmine\world\World;
 
-class TextParameter extends Parameter{
-    public function getType() : int{
-        return AvailableCommandsPacket::ARG_TYPE_RAWTEXT;
-    }
-
+class WorldParameter extends StringParameter{
     public function getTypeName() : string{
-        return "text";
+        return "world";
     }
 
-    public function prepare() : Parameter{
-        $this->setLength(PHP_INT_MAX);
-        return $this;
+    /**
+     * @return World|null
+     */
+    public function parseSilent(CommandSender $sender, string $argument){
+        return Server::getInstance()->getWorldManager()->getWorldByName($argument);
     }
 }

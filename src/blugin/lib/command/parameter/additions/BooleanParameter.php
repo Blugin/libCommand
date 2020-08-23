@@ -23,8 +23,10 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\parameter;
+namespace blugin\lib\command\parameter\additions;
 
+use blugin\lib\command\parameter\defaults\EnumParameter;
+use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 

@@ -23,16 +23,26 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\parameter;
+namespace blugin\lib\command\parameter\defaults;
 
+use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
-class StringParameter extends Parameter{
+class JsonParameter extends TextParameter{
     public function getType() : int{
-        return AvailableCommandsPacket::ARG_TYPE_STRING;
+        return AvailableCommandsPacket::ARG_TYPE_JSON;
     }
 
     public function getTypeName() : string{
-        return "string";
+        return "json";
+    }
+
+    /**
+     * @return array|null the parsed json array
+     */
+    public function parseSilent(CommandSender $sender, string $argument){
+        $result = parent::parseSilent($sender, $argument);
+        $data = $result === null ? null : json_decode($result);
+        return $data === null || !is_array($result) ? null : $data;
     }
 }

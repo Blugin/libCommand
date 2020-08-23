@@ -23,25 +23,22 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\parameter;
+namespace blugin\lib\command\parameter\defaults;
 
-use pocketmine\command\CommandSender;
+use blugin\lib\command\parameter\Parameter;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
-class IntegerParameter extends FloatParameter{
+class TextParameter extends Parameter{
     public function getType() : int{
-        return AvailableCommandsPacket::ARG_TYPE_INT;
+        return AvailableCommandsPacket::ARG_TYPE_RAWTEXT;
     }
 
     public function getTypeName() : string{
-        return "int";
+        return "text";
     }
 
-    /**
-     * @return int|null
-     */
-    public function parseSilent(CommandSender $sender, string $argument){
-        $result = parent::parseSilent($sender, $argument);
-        return $result === null ? null : (int) $result;
+    public function prepare() : Parameter{
+        $this->setLength(PHP_INT_MAX);
+        return $this;
     }
 }
