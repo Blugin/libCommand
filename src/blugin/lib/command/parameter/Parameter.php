@@ -125,16 +125,11 @@ abstract class Parameter extends CommandParameter{
         return $this;
     }
 
-    /**
-     * @param string[] $args the remained parameters
-     */
     public function valid(CommandSender $sender, string $argument) : bool{
         return $this->parse($sender, $argument) !== null;
     }
 
     /**
-     * @param string[] $args the remained parameters
-     *
      * @return string
      */
     public function parse(CommandSender $sender, string $argument){
