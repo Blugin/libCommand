@@ -125,6 +125,11 @@ abstract class Parameter extends CommandParameter{
         return "commands.generic.parameter.invalid";
     }
 
+    public function toUsageString() : string{
+        $name = $this->getName() . ": " . $this->getTypeName();
+        return $this->isOptional() ? "[$name]" : "<$name>";
+    }
+
     public function prepare() : Parameter{
         return $this;
     }
