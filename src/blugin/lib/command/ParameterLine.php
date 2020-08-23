@@ -70,7 +70,7 @@ class ParameterLine{
 
         $this->parameters[] = $parameter;
         if(!$parameter->isOptional()){
-            $this->requireLength = count($this->parameters);
+            $this->requireLength += $parameter->getLength();
         }
         return $this;
     }
