@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\parameter\defaults;
 
+use blugin\lib\command\parameter\Parameter;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
 class StringParameter extends Parameter{
