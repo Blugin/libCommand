@@ -39,10 +39,14 @@ class ItemParameter extends StringParameter{
         return "item";
     }
 
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return "commands.give.item.notFound";
+    }
+
     /**
      * @return Item|null
      */
-    public function parse(CommandSender $sender, string $argument){
+    public function parseSilent(CommandSender $sender, string $argument){
         try{
             return LegacyStringToItemParser::getInstance()->parse($argument);
         }catch(\InvalidArgumentException $e){

@@ -41,7 +41,7 @@ abstract class EnumParameter extends Parameter{
     /**
      * @return string|null
      */
-    public function parse(CommandSender $sender, string $argument){
+    public function parseSilent(CommandSender $sender, string $argument){
         if($this->enum !== null){
             if($this->isExact()){
                 foreach($this->enum->getValues() as $value){

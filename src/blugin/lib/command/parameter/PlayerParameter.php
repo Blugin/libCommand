@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\parameter;
 
+use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 use pocketmine\Server;
@@ -39,6 +40,10 @@ class PlayerParameter extends EnumParameter{
 
     public function getTypeName() : string{
         return "target";
+    }
+
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return "commands.generic.player.notFound";
     }
 
     public function prepare() : Parameter{

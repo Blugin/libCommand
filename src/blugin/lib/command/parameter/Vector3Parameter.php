@@ -61,7 +61,7 @@ class Vector3Parameter extends Parameter{
     /**
      * @return Vector3|null
      */
-    public function parse(CommandSender $sender, string $argument){
+    public function parseSilent(CommandSender $sender, string $argument){
         if(!$this->valid($sender, $argument))
             return null;
 

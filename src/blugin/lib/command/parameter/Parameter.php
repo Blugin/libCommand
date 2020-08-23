@@ -121,18 +121,37 @@ abstract class Parameter extends CommandParameter{
         return $this;
     }
 
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return "commands.generic.parameter.invalid";
+    }
+
     public function prepare() : Parameter{
         return $this;
     }
 
     public function valid(CommandSender $sender, string $argument) : bool{
-        return $this->parse($sender, $argument) !== null;
+        return $this->parseSilent($sender, $argument) !== null;
     }
 
     /**
      * @return string
      */
     public function parse(CommandSender $sender, string $argument){
+        $result = $this->parseSilent($sender, $argument);
+        if($result !== null)
+            return $result;
+
+        $failureMessage = $this->getFailureMessage($sender, $argument);
+        if(is_string($failureMessage)){
+            $this->getBaseCommand()->sendMessage($sender, $failureMessage, explode(" ", $argument));
+        }
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function parseSilent(CommandSender $sender, string $argument){
         return $argument;
     }
 

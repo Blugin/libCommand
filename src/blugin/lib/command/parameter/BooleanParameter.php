@@ -33,6 +33,10 @@ class BooleanParameter extends EnumParameter{
         return "Boolean";
     }
 
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return "commands.generic.boolean.invalid";
+    }
+
     public function prepare() : Parameter{
         $this->enum = new CommandEnum("whether", ["true", "false"]);
         return $this;
@@ -41,8 +45,8 @@ class BooleanParameter extends EnumParameter{
     /**
      * @return bool|null
      */
-    public function parse(CommandSender $sender, string $argument){
-        $result = parent::parse($sender, $argument);
+    public function parseSilent(CommandSender $sender, string $argument){
+        $result = parent::parseSilent($sender, $argument);
         return $result === null ? null : $result === "true";
     }
 }

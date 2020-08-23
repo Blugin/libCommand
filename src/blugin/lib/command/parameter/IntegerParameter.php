@@ -40,8 +40,8 @@ class IntegerParameter extends FloatParameter{
     /**
      * @return int|null
      */
-    public function parse(CommandSender $sender, string $argument){
-        $result = parent::parse($sender, $argument);
+    public function parseSilent(CommandSender $sender, string $argument){
+        $result = parent::parseSilent($sender, $argument);
         return $result === null ? null : (int) $result;
     }
 }

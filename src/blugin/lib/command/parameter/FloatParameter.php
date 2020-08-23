@@ -43,16 +43,8 @@ class FloatParameter extends Parameter{
         return "decimal";
     }
 
-    public function valid(CommandSender $sender, string $argument) : bool{
-        if(!is_numeric($argument)){
-            return false;
-        }
-        $num = (float) $argument;
-        if($this->min !== null && $num < $this->min || $this->max !== null && $num > $this->max){
-            return false;
-        }
-
-        return true;
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return null;
     }
 
     /**
@@ -60,18 +52,33 @@ class FloatParameter extends Parameter{
      */
     public function parse(CommandSender $sender, string $argument){
         if(!is_numeric($argument)){
-            $this->getBaseCommand()->sendMessage($sender, "commands.generic.invalidNumber", [$argument]);
+            $this->sendMessage($sender, "commands.generic.num.invalid", [$argument]);
             return null;
         }
-        $num = (float) $argument;
 
+        $num = (float) $argument;
         if($this->min !== null && $num < $this->min){
-            $this->getBaseCommand()->sendMessage($sender, "commands.generic.num.tooSmall", [$argument, "$this->min"]);
+            $this->sendMessage($sender, "commands.generic.num.tooSmall", [$argument, "$this->min"]);
             return null;
         }
 
         if($this->max !== null && $num > $this->max){
-            $this->getBaseCommand()->sendMessage($sender, "commands.generic.num.tooBig", [$argument, "$this->max"]);
+            $this->sendMessage($sender, "commands.generic.num.tooBig", [$argument, "$this->max"]);
+            return null;
+        }
+
+        return $num;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function parseSilent(CommandSender $sender, string $argument){
+        if(!is_numeric($argument))
+            return null;
+
+        $num = (float) $argument;
+        if($this->min !== null && $num < $this->min || $this->max !== null && $num > $this->max){
             return null;
         }
 
