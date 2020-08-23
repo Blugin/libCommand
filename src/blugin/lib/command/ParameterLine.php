@@ -27,11 +27,13 @@ namespace blugin\lib\command;
 
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
+use pocketmine\utils\TextFormat;
 
 class ParameterLine{
     public const ERROR_NAME_MISMATCH = -1;
     public const ERROR_PARAMETER_INSUFFICIENT = -2;
     public const ERROR_PARAMETER_INVALID = -3;
+    public const ERROR_PERMISSION_DENIED = -4;
 
     /** @var BaseCommand */
     protected $baseCommand;
@@ -61,6 +63,18 @@ class ParameterLine{
     public function setName(?string $name) : ParameterLine{
         $this->name = $name;
         return $this;
+    }
+
+    public function getPermission() : string{
+        return $this->name !== null ? $this->baseCommand->getPermission() . "." . $this->name : "";
+    }
+
+    public function testPermission(CommandSender $sender) : bool{
+        if($this->getPermission() == "" | $sender->hasPermission($this->getPermission()))
+            return true;
+
+        $this->baseCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
+        return false;
     }
 
     /** @return Parameter[] */
@@ -143,6 +157,9 @@ class ParameterLine{
             if(strcasecmp($this->name, array_pop($args)) !== 0)
                 return self::ERROR_NAME_MISMATCH;
         }
+
+        if(!$this->testPermission($sender))
+            return self::ERROR_PERMISSION_DENIED;
 
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
