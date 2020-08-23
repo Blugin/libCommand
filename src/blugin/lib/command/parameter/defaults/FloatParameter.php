@@ -48,6 +48,10 @@ class FloatParameter extends Parameter{
         return null;
     }
 
+    public function valid(CommandSender $sender, string $argument) : bool{
+        return is_numeric($argument);
+    }
+
     /** @return float|null */
     public function parse(CommandSender $sender, string $argument){
         if(!is_numeric($argument)){

@@ -133,7 +133,7 @@ abstract class Parameter extends CommandParameter{
     }
 
     public function valid(CommandSender $sender, string $argument) : bool{
-        return $this->parseSilent($sender, $argument) !== null;
+        return true;
     }
 
     /** @return string */

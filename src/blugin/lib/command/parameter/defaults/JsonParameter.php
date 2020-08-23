@@ -37,7 +37,10 @@ class JsonParameter extends TextParameter{
         return "json";
     }
 
-    /** @return array|null the parsed json array */
+    public function valid(CommandSender $sender, string $argument) : bool{
+        return preg_match("/^{([.]*)}$/", $argument);
+    }
+
     public function parseSilent(CommandSender $sender, string $argument){
         $result = parent::parseSilent($sender, $argument);
         $data = $result === null ? null : json_decode($result);

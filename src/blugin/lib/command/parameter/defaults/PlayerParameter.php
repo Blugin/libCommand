@@ -72,6 +72,10 @@ class PlayerParameter extends EnumParameter{
         return $this;
     }
 
+    public function valid(CommandSender $sender, string $argument) : bool{
+        return preg_match("/^([a-zA-Z_][a-zA-Z_ 0-9]*)$/", $argument);
+    }
+
     public function isIncludeOffline() : bool{
         return $this->includeOffline;
     }
