@@ -95,6 +95,18 @@ class ParameterLine{
         return $this->requireLength;
     }
 
+    public function toUsageString() : string{
+        $usage = "";
+        if($this->name !== null){
+            $usage .= $this->name;
+        }
+
+        foreach($this->parameters as $parameter){
+            $usage .= " " . $parameter->toUsageString();
+        }
+        return $usage;
+    }
+
     /** @param string[] $args */
     public function valid(CommandSender $sender, array $args) : bool{
         if($this->name !== null){
