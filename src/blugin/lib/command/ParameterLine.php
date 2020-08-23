@@ -61,6 +61,11 @@ class ParameterLine{
 
             if($before->isOptional() && !$parameter->isOptional())
                 throw new \RuntimeException("You can't register not-optional parameter after optional parameter");
+
+            foreach($this->parameters as $oldParam){
+                if($oldParam->getName() === $parameter->getName())
+                    throw new \RuntimeException("You can't register multiple parameters with the same name");
+            }
         }
 
         $this->parameters[] = $parameter;
