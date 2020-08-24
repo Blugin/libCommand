@@ -27,6 +27,12 @@ declare(strict_types=1);
 
 namespace blugin\lib;
 
+use blugin\lib\command\AvaliableCommandListener;
+use pocketmine\event\Listener;
 use pocketmine\plugin\PluginBase;
 
-class libSubcommands extends PluginBase{}
+class libSubcommands extends PluginBase implements Listener{
+    public function onEnable() : void{
+        $this->getServer()->getPluginManager()->registerEvents(new AvaliableCommandListener(), $this);
+    }
+}
