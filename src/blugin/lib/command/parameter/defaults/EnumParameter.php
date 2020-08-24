@@ -39,6 +39,10 @@ abstract class EnumParameter extends Parameter{
         return -1;
     }
 
+    public function getTypeName() : string{
+        return "unknown";
+    }
+
     /** @return string|null */
     public function parseSilent(CommandSender $sender, string $argument){
         if($this->enum !== null){
