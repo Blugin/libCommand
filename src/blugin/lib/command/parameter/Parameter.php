@@ -39,7 +39,7 @@ abstract class Parameter extends CommandParameter{
     /** @var int length of parameter */
     protected $length = 1;
 
-    public function __construct(?ParameterLine $owningLine, string $name = null, bool $optional = false, ?CommandEnum $enum = null){
+    public function __construct(?ParameterLine $owningLine = null, string $name = null, bool $optional = false, ?CommandEnum $enum = null){
         $this->owningLine = $owningLine;
 
         $this->paramName = $name;
