@@ -45,7 +45,9 @@ abstract class Parameter extends CommandParameter{
         $this->paramName = $name;
         $this->isOptional = $optional;
         $this->enum = $enum;
+        $this->prepare();
         $this->paramType = $this->getParamType();
+        $this->flags = $this->getFlags();
     }
 
     public function getOwningLine() : ?ParameterLine{
