@@ -62,7 +62,7 @@ class BaseCommand extends Command implements PluginOwned{
         foreach($this->parameterLines as $key => $parameterLine){
             if($parameterLine->valid($sender, $args)){
                 $result = $parameterLine->parse($sender, $args);
-                return $parameterLine->onParse($sender, $result);
+                return is_numeric($result) ? true : $parameterLine->onParse($sender, $result);
             }
         }
         $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage()]));
