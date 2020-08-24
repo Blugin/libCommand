@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
+use blugin\lib\command\parameter\additions\ConstParameter;
+use blugin\lib\command\parameter\Parameter;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -105,5 +107,21 @@ class BaseCommand extends Command implements PluginOwned{
 
     public function addParameterLine(ParameterLine $parameterLine) : void{
         $this->parameterLines[] = $parameterLine;
+    }
+
+    /**
+     * @return Parameter[][]
+     */
+    public function toOverloads() : array{
+        $overloads = [];
+        foreach($this->parameterLines as $line){
+            $parameters = $line->getParameters();
+            $name = $line->getName();
+            if($name !== null){
+                array_unshift($parameters, new ConstParameter($line, $name));
+            }
+            $overloads[] = $parameters;
+        }
+        return $overloads;
     }
 }
