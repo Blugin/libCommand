@@ -43,6 +43,17 @@ abstract class EnumParameter extends Parameter{
         return "unknown";
     }
 
+    public function toUsageString() : string{
+        if($this->enum === null)
+            return parent::toUsageString();
+
+        if(count($this->enum->getValues()) === 1)
+            return $this->enum->getValues()[0];
+
+        $name = $this->getName() . ": " . $this->enum->getName();
+        return $this->isOptional() ? "[$name]" : "<$name>";
+    }
+
     /** @return string|null */
     public function parseSilent(CommandSender $sender, string $argument){
         if($this->enum !== null){
