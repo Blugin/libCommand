@@ -37,6 +37,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 
 class BaseCommand extends Command implements PluginOwned{
     use PluginOwnedTrait;
@@ -65,10 +66,22 @@ class BaseCommand extends Command implements PluginOwned{
         foreach($this->parameterLines as $key => $parameterLine){
             if($parameterLine->valid($sender, $args)){
                 $result = $parameterLine->parse($sender, $args);
-                return is_numeric($result) ? true : $parameterLine->onParse($sender, $result);
+                switch($result){
+                    case ParameterLine::ERROR_NAME_MISMATCH:
+                        break;
+                    case ParameterLine::ERROR_PARAMETER_INVALID:
+                    case ParameterLine::ERROR_PARAMETER_INSUFFICIENT:
+                        $this->sendMessage($sender, "commands.generic.usage", ["/{$this->getName()} " . $parameterLine->toUsageString()]);
+                        return true;
+                    case ParameterLine::ERROR_PERMISSION_DENIED:
+                        $this->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
+                        return true;
+                    default:
+                        return is_numeric($result) ? true : $parameterLine->onParse($sender, $result);
+                }
             }
         }
-        $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage()]));
+        $this->sendMessage($sender, "commands.generic.usage", [$this->getUsage()]);
         return true;
     }
 
