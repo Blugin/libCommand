@@ -65,12 +65,8 @@ class ParameterLine{
     }
 
     public function getFullMessage(string $str) : string{
-        if($this->name === null)
-            return $str;
-
         $baseLabel = strtolower($this->baseCommand->getName());
-        $label = strtolower($this->getName());
-        return "commands.$baseLabel.$label.$str";
+        return "commands.$baseLabel." . ($this->name === null ? "" : strtolower($this->name . ".")) . "$str";
     }
 
     public function getName() : ?string{
