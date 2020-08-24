@@ -30,6 +30,7 @@ namespace blugin\lib\command;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\lang\TranslationContainer;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
@@ -86,7 +87,7 @@ class BaseCommand extends Command implements PluginOwned{
 
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
         if($this->owningPlugin instanceof TranslatorHolder){
-            return $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
+            $str = $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
         }
 
         return Server::getInstance()->getLanguage()->translateString($str, $params);
@@ -94,7 +95,7 @@ class BaseCommand extends Command implements PluginOwned{
 
     /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
-        $sender->sendMessage($this->getMessage($sender, $str, $params));
+        $sender->sendMessage(new TranslationContainer($this->getMessage($sender, $str, $params), $params));
     }
 
     /** @return ParameterLine[] */
