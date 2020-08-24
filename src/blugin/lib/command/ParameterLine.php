@@ -141,6 +141,8 @@ class ParameterLine{
             }
         }
 
+
+        $parameter->setOwningLine($this);
         $this->parameters[] = $parameter;
         if(!$parameter->isOptional()){
             $this->requireLength += $parameter->getLength();
