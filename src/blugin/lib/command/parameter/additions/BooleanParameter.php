@@ -40,7 +40,7 @@ class BooleanParameter extends EnumParameter{
     }
 
     public function prepare() : Parameter{
-        $this->enum = new CommandEnum("whether", ["true", "false"]);
+        $this->enum = new CommandEnum("Boolean", ["true", "false"]);
         return $this;
     }
 
