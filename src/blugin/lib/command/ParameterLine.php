@@ -42,7 +42,7 @@ class ParameterLine{
     protected $name;
 
     /** @var string[] */
-    private $aliases;
+    private $aliases = [];
 
     /** @var Parameter[] */
     protected $parameters = [];
@@ -82,11 +82,14 @@ class ParameterLine{
     }
 
     /** @param string[] $args */
-    public function testName(array &$args) : bool{
+    public function testName(array $args) : bool{
         if($this->name === null)
             return true;
 
-        $name = array_pop($args);
+        $name = array_shift($args);
+        if($name === null)
+            return false;
+
         if(strcasecmp($this->name, $name) === 0)
             return true;
 
@@ -180,8 +183,10 @@ class ParameterLine{
         if(!$this->testName($args))
             return false;
 
+        array_shift($args);
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
+
         if($argsCount < $requireCount)
             return false;
 
@@ -192,7 +197,7 @@ class ParameterLine{
 
             $argument = implode(" ", array_slice($args, $offset, $parameter->getLength()));
             if($parameter->valid($sender, $argument))
-                return false;
+                return true;
 
             $offset += $parameter->getLength();
         }
@@ -208,6 +213,7 @@ class ParameterLine{
         if(!$this->testName($args))
             return self::ERROR_NAME_MISMATCH;
 
+        array_shift($args);
         if(!$this->testPermission($sender))
             return self::ERROR_PERMISSION_DENIED;
 

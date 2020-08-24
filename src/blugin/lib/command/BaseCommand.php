@@ -56,9 +56,9 @@ class BaseCommand extends Command implements PluginOwned{
         if(!$this->owningPlugin->isEnabled() || !$this->testPermission($sender))
             return false;
 
-        if(empty($this->parameterLines)){
+        if(empty($this->parameterLines))
             return false;
-        }
+
         foreach($this->parameterLines as $key => $parameterLine){
             if($parameterLine->valid($sender, $args)){
                 $result = $parameterLine->parse($sender, $args);
