@@ -50,6 +50,9 @@ class ParameterLine{
     /** @var int */
     protected $requireLength = 0;
 
+    /** @var ICommandHandler|null */
+    protected $handler = null;
+
     public function __construct(BaseCommand $baseCommand, ?string $name = null){
         $this->baseCommand = $baseCommand;
         $this->name = $name;
@@ -149,6 +152,15 @@ class ParameterLine{
         return $this->requireLength;
     }
 
+    public function getHandler() : ?ICommandHandler{
+        return $this->handler;
+    }
+
+    public function setHandler(?ICommandHandler $handler) : ParameterLine{
+        $this->handler = $handler;
+        return $this;
+    }
+
     public function toUsageString() : string{
         $usage = "";
         if($this->name !== null){
@@ -217,5 +229,10 @@ class ParameterLine{
             $results[$parameter->getName()] = $result;
         }
         return $results;
+    }
+
+    /** @param mixed[] $args name => value */
+    public function onParse(CommandSender $sender, array $args) : bool{
+        return $this->handler === null ? false : $this->handler->handle($sender, $args, $this);
     }
 }

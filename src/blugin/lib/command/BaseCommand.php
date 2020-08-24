@@ -29,14 +29,13 @@ namespace blugin\lib\command;
 
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\Server;
 
-class BaseCommand extends Command implements PluginOwned, CommandExecutor{
+class BaseCommand extends Command implements PluginOwned{
     use PluginOwnedTrait;
 
     /** @var ParameterLine[] */
@@ -60,25 +59,14 @@ class BaseCommand extends Command implements PluginOwned, CommandExecutor{
         if(empty($this->parameterLines)){
             return false;
         }
-
-        return $this->onCommand($sender, $this, $commandLabel, $args);
-    }
-
-    /** @param string[] $args */
-    public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
         foreach($this->parameterLines as $key => $parameterLine){
             if($parameterLine->valid($sender, $args)){
                 $result = $parameterLine->parse($sender, $args);
-                $this->onCompletion($sender, $result);
-                return true;
+                return $parameterLine->onParse($sender, $result);
             }
         }
         $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage()]));
         return true;
-    }
-
-    /** @param mixed[] $args name => value */
-    public function onCompletion(CommandSender $sender, array $args) : bool{
     }
 
     public function getUsage() : string{
