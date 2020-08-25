@@ -25,9 +25,10 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
+use blugin\lib\command\handler\ICommandHandler;
+use blugin\lib\command\hanlder\ClosureCommandHandler;
 use blugin\lib\command\parameter\additions\ConstParameter;
 use blugin\lib\command\parameter\Parameter;
-use blugin\lib\command\traits\ICommandHandler;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
@@ -161,7 +162,11 @@ class Overload{
         return $this->handler;
     }
 
-    public function setHandler(?ICommandHandler $handler) : Overload{
+    /** @param ICommandHandler|\Closure|null $handler */
+    public function setHandler($handler) : Overload{
+        if($handler instanceof \Closure){
+            $handler = new ClosureCommandHandler($handler);
+        }
         $this->handler = $handler;
         return $this;
     }
