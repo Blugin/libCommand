@@ -72,16 +72,4 @@ trait BaseCommandTrait{
             }
         }
     }
-
-    public function onLoad() : void{
-        $this->getBaseCommand();
-    }
-
-    public function onEnable() : void{
-        Server::getInstance()->getCommandMap()->register($this->getName(), $this->getBaseCommand());
-    }
-
-    public function onDisble() : void{
-        Server::getInstance()->getCommandMap()->unregister($this->getBaseCommand());
-    }
 }
