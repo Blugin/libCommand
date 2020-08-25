@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
+use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
-use blugin\lib\command\hanlder\ClosureCommandHandler;
 use blugin\lib\command\parameter\additions\ConstParameter;
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
@@ -85,7 +85,7 @@ class Overload{
     }
 
     public function getNameParameter(?bool $exact = false, ?string $name = null) : ?ConstParameter{
-        return $this->name === null ? null : (new ConstParameter($this, $name ?? $this->name))->setExact($exact);
+        return $this->name === null ? null : (new ConstParameter($name ?? $this->name))->setOverload($this)->setExact($exact);
     }
 
     public function testName(CommandSender $sender, ?string $name) : bool{
@@ -215,7 +215,7 @@ class Overload{
      */
     public function parse(CommandSender $sender, array $args){
         if($this->name !== null && !$this->testName($sender, array_shift($args)))
-            return self::ERROR_NAME_MISMATCH;;
+            return self::ERROR_NAME_MISMATCH;
 
         if(!$this->testPermission($sender))
             return self::ERROR_PERMISSION_DENIED;
