@@ -42,16 +42,18 @@ class BaseCommand extends Command implements PluginOwned{
     use PluginOwnedTrait;
 
     /** @var Overload[] */
-    private $overloads = [];
+    protected $overloads = [];
 
-    public function __construct(string $name, PluginBase $owner){
-        parent::__construct($name);
+    /** @param string[] $aliases */
+    public function __construct(string $name, PluginBase $owner, array $aliases){
+        if(!$owner instanceof TranslatorHolder)
+            throw new \InvalidArgumentException("BaseCommand's plugin must implement TranslatorHolder.");
+
+        parent::__construct($name, "", null, $aliases);
         $this->owningPlugin = $owner;
 
-        if($owner instanceof TranslatorHolder){
-            $label = strtolower($owner->getName());
-            $this->setDescription($owner->getTranslator()->translate("commands.$label.description"));
-        }
+        $this->setPermission("{$this->getLabel()}.cmd");
+        $this->setDescription($owner->getTranslator()->translate("commands.{$this->getLabel()}.description"));
     }
 
     /** @param string[] $args */
@@ -100,10 +102,7 @@ class BaseCommand extends Command implements PluginOwned{
     }
 
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
-        if($this->owningPlugin instanceof TranslatorHolder){
-            $str = $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
-        }
-
+        $str = $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
         return Server::getInstance()->getLanguage()->translateString($str, $params);
     }
 

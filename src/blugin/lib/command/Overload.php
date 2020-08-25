@@ -44,6 +44,9 @@ class Overload{
     /** @var string|null */
     protected $name;
 
+    /** @var string|null */
+    protected $label;
+
     /** @var string[] */
     private $aliases = [];
 
@@ -58,7 +61,7 @@ class Overload{
 
     public function __construct(BaseCommand $baseCommand, ?string $name = null){
         $this->baseCommand = $baseCommand;
-        $this->name = $name;
+        $this->setName($name);
     }
 
     public function getBaseCommand() : BaseCommand{
@@ -71,8 +74,7 @@ class Overload{
     }
 
     public function getFullMessage(string $str) : string{
-        $baseLabel = strtolower($this->baseCommand->getName());
-        return "commands.$baseLabel." . ($this->name === null ? "" : strtolower($this->name . ".")) . "$str";
+        return "commands.{$this->baseCommand->getLabel()}." . ($this->name === null ? "" : strtolower($this->name . ".")) . "$str";
     }
 
     public function getName() : ?string{

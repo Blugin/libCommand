@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpParamsInspection */
 
 /*
  *
@@ -48,13 +48,7 @@ trait SubcommandTrait{
     }
 
     public function createCommand(?string $label = null) : BaseCommand{
-        $label = trim(strtolower($label ?? $this->getName()));
-        /** @noinspection PhpParamsInspection */
-        $command = new BaseCommand($label, $this);
-        $command->setPermission("$label.cmd");
-        $command->setAliases($this->getConfig()->getNested("command.aliases", []));
-
-        return $command;
+        return new BaseCommand(trim(strtolower($label ?? $this->getName())), $this, $this->getConfig()->getNested("command.aliases", []));
     }
 
     public function recalculatePermissions() : void{
