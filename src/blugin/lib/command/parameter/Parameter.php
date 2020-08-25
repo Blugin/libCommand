@@ -28,11 +28,14 @@ namespace blugin\lib\command\parameter;
 use blugin\lib\command\BaseCommand;
 use blugin\lib\command\enum\Enum;
 use blugin\lib\command\overload\Overload;
+use blugin\lib\command\traits\LabelHolderTrait;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
 
 abstract class Parameter extends CommandParameter{
+    use LabelHolderTrait;
+
     /** @var Overload|null */
     protected $overload = null;
 
@@ -41,9 +44,6 @@ abstract class Parameter extends CommandParameter{
 
     /** @var Enum|null */
     public $enum;
-
-    /** @var string */
-    protected $label;
 
     public function __construct(string $name = null, bool $optional = false, ?Enum $enum = null, ?Overload $overload = null){
         $this->overload = $overload;
@@ -81,15 +81,6 @@ abstract class Parameter extends CommandParameter{
 
     public function setName(?string $name) : Parameter{
         $this->paramName = $name;
-        return $this;
-    }
-
-    public function getLabel() : string{
-        return $this->label;
-    }
-
-    public function setLabel(string $label) : Parameter{
-        $this->label = strtolower($label);
         return $this;
     }
 

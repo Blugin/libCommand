@@ -28,14 +28,12 @@ namespace blugin\lib\command\overload;
 use blugin\lib\command\BaseCommand;
 use blugin\lib\command\parameter\additions\ConstParameter;
 use blugin\lib\command\parameter\Parameter;
+use blugin\lib\command\traits\LabelHolderTrait;
+use blugin\lib\command\traits\NameHolderTrait;
 use pocketmine\command\CommandSender;
 
 class NamedOverload extends Overload{
-    /** @var string */
-    protected $label;
-
-    /** @var string */
-    protected $name;
+    use LabelHolderTrait, NameHolderTrait;
 
     /** @var string[] */
     private $aliases = [];
@@ -48,24 +46,6 @@ class NamedOverload extends Overload{
 
     public function getFullMessage(string $str) : string{
         return "commands.{$this->baseCommand->getLabel()}.{$this->getLabel()}$str";
-    }
-
-    public function getName() : ?string{
-        return $this->name;
-    }
-
-    public function setName(?string $name) : Overload{
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getLabel() : string{
-        return $this->label;
-    }
-
-    public function setLabel(string $label) : Overload{
-        $this->label = strtolower($label);
-        return $this;
     }
 
     /** @return string[] */
