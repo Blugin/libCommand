@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\traits;
+namespace blugin\lib\command;
 
 use blugin\lib\command\BaseCommand;
 use pocketmine\permission\PermissionManager;
@@ -33,7 +33,7 @@ use pocketmine\Server;
 /**
  * This trait override most methods in the {@link PluginBase} abstract class.
  */
-trait SubcommandTrait{
+trait BaseCommandTrait{
     /** @var BaseCommand */
     private $baseCommand;
 
