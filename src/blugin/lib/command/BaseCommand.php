@@ -25,105 +25,116 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
-use blugin\lib\command\exception\ExceptionHandler;
+use blugin\lib\command\parameter\Parameter;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\lang\TranslationContainer;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 
-class BaseCommand extends Command implements PluginOwned, CommandExecutor{
+class BaseCommand extends Command implements PluginOwned{
     use PluginOwnedTrait;
 
-    /** @var Subcommand[] */
-    private $subcommands = [];
+    /** @var Overload[] */
+    protected $overloads = [];
 
-    /** @var ExceptionHandler */
-    private $exceptionHandler;
+    /** @param string[] $aliases */
+    public function __construct(string $name, PluginBase $owner, array $aliases){
+        if(!$owner instanceof TranslatorHolder)
+            throw new \InvalidArgumentException("BaseCommand's plugin must implement TranslatorHolder.");
 
-    public function __construct(string $name, PluginBase $owner){
-        parent::__construct($name);
+        parent::__construct($name, "", null, $aliases);
         $this->owningPlugin = $owner;
-        $this->exceptionHandler = new ExceptionHandler($this);
 
-        if($owner instanceof TranslatorHolder){
-            $label = strtolower($owner->getName());
-            $this->setUsage($owner->getTranslator()->translate("commands.$label.usage"));
-            $this->setDescription($owner->getTranslator()->translate("commands.$label.description"));
-        }
+        $this->setPermission("{$this->getLabel()}.cmd");
+        $this->setDescription($owner->getTranslator()->translate("commands.{$this->getLabel()}.description"));
     }
 
+    /** @param string[] $args */
     public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
-        return $this->owningPlugin->isEnabled() && $this->testPermission($sender) && $this->onCommand($sender, $this, $commandLabel, $args);
-    }
+        if(!$this->owningPlugin->isEnabled() || !$this->testPermission($sender))
+            return false;
 
-    public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
-        $label = array_shift($args) ?? "";
-        foreach($this->subcommands as $key => $subcommand){
-            if($subcommand->checkLabel($label)){
-                try{
-                    $subcommand->handle($sender, $args);
-                }catch(\Exception $e){
-                    if(!$this->exceptionHandler->handle($e, $sender, $subcommand))
-                        throw $e;
+        if(empty($this->overloads))
+            return false;
+
+        foreach($this->overloads as $key => $overload){
+            if($overload->valid($sender, $args)){
+                $result = $overload->parse($sender, $args);
+                switch($result){
+                    case Overload::ERROR_NAME_MISMATCH:
+                        break;
+                    case Overload::ERROR_PARAMETER_INVALID:
+                    case Overload::ERROR_PARAMETER_INSUFFICIENT:
+                        $this->sendMessage($sender, "commands.generic.usage", ["/{$this->getName()} " . $overload->toUsageString()]);
+                        return true;
+                    case Overload::ERROR_PERMISSION_DENIED:
+                        $this->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
+                        return true;
+                    default:
+                        return is_numeric($result) ? true : $overload->onParse($sender, $result);
                 }
-                return true;
             }
         }
-        $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$this->getUsage($sender)]));
+        $this->sendMessage($sender, "commands.generic.usage", [$this->getUsage()]);
         return true;
     }
 
-    /**
-     * Override for display different usage messages depending on player permissions
-     */
-    public function getUsage(CommandSender $sender = null) : string{
-        if($sender === null || !$this->owningPlugin instanceof TranslatorHolder)
-            return $this->usageMessage;
+    public function getUsage() : string{
+        $usage = "/{$this->getName()}";
 
-        $subCommands = [];
-        foreach($this->subcommands as $key => $subCommand){
-            if($subCommand->testPermissionSilent($sender)){
-                $subCommands[] = $subCommand->getName();
-            }
-        }
-        $label = strtolower($this->getName());
-        return $this->getMessage($sender, "commands.$label.usage", [implode(" | ", $subCommands)]);
+        $count = count($this->overloads);
+        if($count === 0)
+            return $usage;
+
+        if($count === 1)
+            return "$usage {$this->overloads[0]->toUsageString()}";
+
+        return "$usage <" . implode(" | ", array_map(function(Overload $overload) : string{
+                return $overload->getName() ?? $overload->toUsageString();
+            }, $this->overloads)) . ">";
     }
 
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
-        if($this->owningPlugin instanceof TranslatorHolder){
-            return $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
-        }
-
+        $str = $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
         return Server::getInstance()->getLanguage()->translateString($str, $params);
     }
 
+    /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
-        $sender->sendMessage($this->getMessage($sender, $str, $params));
+        $sender->sendMessage(new TranslationContainer($this->getMessage($sender, $str, $params), $params));
     }
 
-    /** @return Subcommand[] */
-    public function getSubcommands() : array{
-        return $this->subcommands;
+    /** @return Overload[] */
+    public function getOverloads() : array{
+        return $this->overloads;
     }
 
-    public function registerSubcommand(Subcommand $subcommand) : void{
-        $this->subcommands[$subcommand->getLabel()] = $subcommand;
-    }
-
-    public function unregisterSubcommand(string $label) : bool{
-        if(isset($this->subcommands[$label])){
-            unset($this->subcommands[$label]);
-            return true;
+    public function addOverload(?Overload $overload = null) : Overload{
+        if($overload === null){
+            $overload = new Overload($this);
         }
-        return false;
+        $this->overloads[] = $overload;
+        return $overload;
     }
 
-    public function getExceptionHandler() : ExceptionHandler{
-        return $this->exceptionHandler;
+    /**
+     * @return Parameter[][]
+     */
+    public function asOverloadsArray() : array{
+        $overloads = [];
+        foreach($this->overloads as $overload){
+            $parameters = $overload->getParameters();
+            $name = $overload->getName();
+            if($name !== null){
+                array_unshift($parameters, $overload->getNameParameter());
+            }
+            $overloads[] = $parameters;
+        }
+        return $overloads;
     }
 }

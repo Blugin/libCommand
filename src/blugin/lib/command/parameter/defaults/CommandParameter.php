@@ -23,8 +23,17 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception\defaults;
+namespace blugin\lib\command\parameter\defaults;
 
-class GenericNumberTooSmallException extends GenericArgumentException{
-    const LABEL = "num.tooSmall";
+use blugin\lib\command\parameter\Parameter;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+
+class CommandParameter extends Parameter{
+    public function getType() : int{
+        return AvailableCommandsPacket::ARG_TYPE_COMMAND;
+    }
+
+    public function getTypeName() : string{
+        return "command";
+    }
 }

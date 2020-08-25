@@ -23,8 +23,23 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception\defaults;
+namespace blugin\lib\command\parameter\defaults;
 
-class GenericNumberTooBigException extends GenericArgumentException{
-    const LABEL = "num.tooBig";
+use pocketmine\command\CommandSender;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+
+class IntegerParameter extends FloatParameter{
+    public function getType() : int{
+        return AvailableCommandsPacket::ARG_TYPE_INT;
+    }
+
+    public function getTypeName() : string{
+        return "int";
+    }
+
+    /** @return int|null */
+    public function parseSilent(CommandSender $sender, string $argument){
+        $result = parent::parseSilent($sender, $argument);
+        return $result === null ? null : (int) $result;
+    }
 }

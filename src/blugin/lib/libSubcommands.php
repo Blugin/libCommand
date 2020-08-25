@@ -25,6 +25,14 @@ declare(strict_types=1);
 
 namespace blugin\lib;
 
+use blugin\lib\command\listener\AvaliableCommandListener;
+use blugin\lib\command\listener\EnumUpdateListener;
+use pocketmine\event\Listener;
 use pocketmine\plugin\PluginBase;
 
-class libSubcommands extends PluginBase{}
+class libSubcommands extends PluginBase implements Listener{
+    public function onEnable() : void{
+        $this->getServer()->getPluginManager()->registerEvents(new AvaliableCommandListener(), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new EnumUpdateListener(), $this);
+    }
+}

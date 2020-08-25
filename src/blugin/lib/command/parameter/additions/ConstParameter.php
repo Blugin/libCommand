@@ -23,8 +23,19 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception\defaults;
+namespace blugin\lib\command\parameter\additions;
 
-class GenericInvalidBlockException extends GenericArgumentException{
-    const LABEL = "invalidBlock";
+use blugin\lib\command\enum\EnumFactory;
+use blugin\lib\command\parameter\defaults\EnumParameter;
+use blugin\lib\command\parameter\Parameter;
+
+class ConstParameter extends EnumParameter{
+    public function getTypeName() : string{
+        return $this->getName();
+    }
+
+    public function prepare() : Parameter{
+        $this->enum = EnumFactory::getInstance()->set("const-{$this->getName()}", [$this->getName() => $this->getName()]);
+        return $this;
+    }
 }

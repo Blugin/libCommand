@@ -23,19 +23,33 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\validator\defaults;
+namespace blugin\lib\command\parameter\additions;
 
-use blugin\lib\command\exception\defaults\GenericInvalidItemException;
-use blugin\lib\command\validator\ArgumentValidator;
+use blugin\lib\command\parameter\defaults\StringParameter;
+use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\item\LegacyStringToItemParser;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
-class ItemArgumentValidator implements ArgumentValidator{
-    public static function validate(string $argument) : Item{
+class ItemParameter extends StringParameter{
+    public function getType() : int{
+        return AvailableCommandsPacket::ARG_TYPE_INT;
+    }
+
+    public function getTypeName() : string{
+        return "item";
+    }
+
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return "commands.give.item.notFound";
+    }
+
+    /** @return Item|null */
+    public function parseSilent(CommandSender $sender, string $argument){
         try{
             return LegacyStringToItemParser::getInstance()->parse($argument);
         }catch(\InvalidArgumentException $e){
-            throw new GenericInvalidItemException($argument);
+            return null;
         }
     }
 }

@@ -23,18 +23,25 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception\defaults;
+namespace blugin\lib\command\parameter\additions;
 
-use blugin\lib\command\exception\IHandleable;
-use blugin\lib\command\Subcommand;
+use blugin\lib\command\enum\Enum;
+use blugin\lib\command\enum\EnumFactory;
+use blugin\lib\command\parameter\defaults\StringParameter;
+use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
-use pocketmine\command\utils\InvalidCommandSyntaxException;
-use pocketmine\Server;
 
-class ArgumentLackException extends InvalidCommandSyntaxException implements IHandleable{
-    public static function getHandler() : \Closure{
-        return function(ArgumentLackException $e, CommandSender $sender, Subcommand $subcommand) : void{
-            $sender->sendMessage(Server::getInstance()->getLanguage()->translateString("commands.generic.usage", [$subcommand->getUsage()]));
-        };
+class WorldParameter extends StringParameter{
+    public function getTypeName() : string{
+        return "world";
+    }
+
+    public function getFailureMessage(CommandSender $sender, string $argument) : ?string{
+        return "commands.generic.invalidWorld";
+    }
+
+    public function prepare() : Parameter{
+        $this->enum = EnumFactory::getInstance()->get(Enum::WORLDS);
+        return $this;
     }
 }

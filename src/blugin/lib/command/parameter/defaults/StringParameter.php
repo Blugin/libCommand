@@ -23,8 +23,17 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception\defaults;
+namespace blugin\lib\command\parameter\defaults;
 
-class GenericInvalidPlayerException extends GenericArgumentException{
-    const LABEL = "invalidPlayer";
+use blugin\lib\command\parameter\Parameter;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+
+class StringParameter extends Parameter{
+    public function getType() : int{
+        return AvailableCommandsPacket::ARG_TYPE_STRING;
+    }
+
+    public function getTypeName() : string{
+        return "string";
+    }
 }

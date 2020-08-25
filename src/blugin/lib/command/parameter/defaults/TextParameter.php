@@ -23,8 +23,22 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception\defaults;
+namespace blugin\lib\command\parameter\defaults;
 
-class GenericInvalidNumberException extends GenericArgumentException{
-    const LABEL = "invalidNumber";
+use blugin\lib\command\parameter\Parameter;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+
+class TextParameter extends Parameter{
+    public function getType() : int{
+        return AvailableCommandsPacket::ARG_TYPE_RAWTEXT;
+    }
+
+    public function getTypeName() : string{
+        return "text";
+    }
+
+    public function prepare() : Parameter{
+        $this->setLength(PHP_INT_MAX);
+        return $this;
+    }
 }

@@ -23,8 +23,14 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\exception;
+namespace blugin\lib\command\handler;
 
-interface IHandleable{
-    public static function getHandler() : \Closure;
+use blugin\lib\command\Overload;
+use pocketmine\command\CommandSender;
+
+interface ICommandHandler{
+    /**
+     * @param mixed[] $args name => value
+     */
+    public function handle(CommandSender $sender, array $args, Overload $overload) : bool;
 }

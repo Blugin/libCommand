@@ -23,8 +23,17 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\validator;
+namespace blugin\lib\command\parameter\defaults;
 
-interface ArgumentValidator{
-    public static function validate(string $argument);
+use blugin\lib\command\parameter\Parameter;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+
+class ValueParameter extends Parameter{
+    public function getType() : int{
+        return AvailableCommandsPacket::ARG_TYPE_VALUE;
+    }
+
+    public function getTypeName() : string{
+        return "value";
+    }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpParamsInspection */
 
 /*
  *
@@ -23,10 +23,12 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command;
+namespace blugin\lib\command\traits;
 
+use blugin\lib\command\BaseCommand;
 use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 
 /**
  * This trait override most methods in the {@link PluginBase} abstract class.
@@ -44,13 +46,7 @@ trait SubcommandTrait{
     }
 
     public function createCommand(?string $label = null) : BaseCommand{
-        $label = trim(strtolower($label ?? $this->getName()));
-        /** @noinspection PhpParamsInspection */
-        $command = new BaseCommand($label, $this);
-        $command->setPermission("$label.cmd");
-        $command->setAliases($this->getConfig()->getNested("command.aliases", []));
-
-        return $command;
+        return new BaseCommand(trim(strtolower($label ?? $this->getName())), $this, $this->getConfig()->getNested("command.aliases", []));
     }
 
     public function recalculatePermissions() : void{
@@ -61,11 +57,15 @@ trait SubcommandTrait{
         if($defaultValue !== null){
             $permissionManager->getPermission($this->baseCommand->getPermission())->setDefault($defaultValue);
         }
-        foreach($this->baseCommand->getSubcommands() as $key => $subcommand){
-            $label = $subcommand->getLabel();
+        foreach($this->baseCommand->getOverloads() as $key => $overload){
+            $name = $overload->getName();
+            if($name === null)
+                continue;
+
+            $label = strtolower($name);
             $defaultValue = $config->getNested("command.children.$label.permission");
             if($defaultValue !== null){
-                $permissionManager->getPermission($subcommand->getPermission())->setDefault($defaultValue);
+                $permissionManager->getPermission($overload->getPermission())->setDefault($defaultValue);
             }
         }
     }
@@ -75,10 +75,10 @@ trait SubcommandTrait{
     }
 
     public function onEnable() : void{
-        $this->getServer()->getCommandMap()->register($this->getName(), $this->getBaseCommand());
+        Server::getInstance()->getCommandMap()->register($this->getName(), $this->getBaseCommand());
     }
 
     public function onDisble() : void{
-        $this->getServer()->getCommandMap()->unregister($this->getBaseCommand());
+        Server::getInstance()->getCommandMap()->unregister($this->getBaseCommand());
     }
 }
