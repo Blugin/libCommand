@@ -1,0 +1,33 @@
+# Advanced configuration file for libSubcommands plugin
+# Some of these settings are safe, others can break your server if modified incorrectly
+# New settings/defaults won't appear automatically on this file when upgrading
+# This file is an example so it doesn't really work
+
+libsubcommands:
+  #Name of main command
+  #You can change this to be what you want
+  name: "libsubcommands"
+
+  #Permission of main command
+  #You can change this to be what you want
+  permission: "op"
+
+  #Aliases of main command
+  #You can add, replace, or remove them as you like
+  aliases: ["subcommands", "subcmd"]
+
+  children:
+    #Setting of subcommands
+    #Same as main command setting
+    move:
+      name: "Move"
+      aliases: ["Teleport"]
+      permission: "op"
+    tell:
+      name: "Tell"
+      aliases: ["Say"]
+      permission: "op"
+    attack:
+      name: "Attack"
+      aliases: ["punch"]
+      permission: "op"
