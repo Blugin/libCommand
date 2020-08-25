@@ -23,8 +23,9 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command;
+namespace blugin\lib\command\overload;
 
+use blugin\lib\command\BaseCommand;
 use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
 use blugin\lib\command\parameter\Parameter;

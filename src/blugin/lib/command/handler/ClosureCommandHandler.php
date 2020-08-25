@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\handler;
 
-use blugin\lib\command\Overload;
+use blugin\lib\command\overload\Overload;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\Utils;
 

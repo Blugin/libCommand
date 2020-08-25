@@ -27,7 +27,7 @@ namespace blugin\lib\command\parameter;
 
 use blugin\lib\command\BaseCommand;
 use blugin\lib\command\enum\Enum;
-use blugin\lib\command\Overload;
+use blugin\lib\command\overload\Overload;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;

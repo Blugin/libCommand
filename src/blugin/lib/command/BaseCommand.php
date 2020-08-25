@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\config\CommandConfigData;
+use blugin\lib\command\overload\NamedOverload;
+use blugin\lib\command\overload\Overload;
 use blugin\lib\command\parameter\Parameter;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
