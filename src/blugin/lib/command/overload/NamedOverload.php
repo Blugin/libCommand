@@ -45,7 +45,7 @@ class NamedOverload extends Overload{
     }
 
     public function getFullMessage(string $str) : string{
-        return "commands.{$this->baseCommand->getLabel()}.{$this->getLabel()}$str";
+        return "commands.{$this->baseCommand->getLabel()}.{$this->getLabel()}.$str";
     }
 
     /** @return string[] */
