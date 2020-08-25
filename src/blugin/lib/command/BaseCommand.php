@@ -125,7 +125,7 @@ class BaseCommand extends Command implements PluginOwned{
     /**
      * @return Parameter[][]
      */
-    public function toOverloads() : array{
+    public function asOverloadsArray() : array{
         $overloads = [];
         foreach($this->parameterLines as $line){
             $parameters = $line->getParameters();
