@@ -87,6 +87,18 @@ class NamedOverload extends Overload{
         return array_merge([$this->getNameParameter()], parent::getParameters());
     }
 
+    public function addParamater(Parameter $parameter) : Overload{
+        parent::addParamater($parameter);
+        $configData = $this->getBaseCommand()->getConfigData()->getChildren($this->getLabel());
+        if($configData !== null){
+            $childData = $configData->getChildren($parameter->getLabel());
+            if($childData !== null){
+                $parameter->setName($childData->getName());
+            }
+        }
+        return $this;
+    }
+
     public function toUsageString() : string{
         return $this->name . " " . parent::toUsageString();
     }

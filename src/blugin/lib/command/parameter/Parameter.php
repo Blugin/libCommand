@@ -42,12 +42,16 @@ abstract class Parameter extends CommandParameter{
     /** @var Enum|null */
     public $enum;
 
+    /** @var string */
+    protected $label;
+
     public function __construct(string $name = null, bool $optional = false, ?Enum $enum = null, ?Overload $overload = null){
         $this->overload = $overload;
 
         $this->paramName = $name;
         $this->isOptional = $optional;
         $this->enum = $enum;
+        $this->setLabel($name);
         $this->prepare();
         $this->paramType = $this->getParamType();
         $this->flags = $this->getFlags();
@@ -77,6 +81,15 @@ abstract class Parameter extends CommandParameter{
 
     public function setName(?string $name) : Parameter{
         $this->paramName = $name;
+        return $this;
+    }
+
+    public function getLabel() : string{
+        return $this->label;
+    }
+
+    public function setLabel(string $label) : Parameter{
+        $this->label = strtolower($label);
         return $this;
     }
 
