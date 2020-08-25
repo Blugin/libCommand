@@ -31,6 +31,8 @@ use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\lang\TranslationContainer;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginOwned;
 use pocketmine\plugin\PluginOwnedTrait;
@@ -58,6 +60,7 @@ class BaseCommand extends Command implements PluginOwned{
         $this->setLabel($label);
         $permissionName = "{$this->getLabel()}.cmd";
         $this->setPermission($permissionName);
+        $this->recalculatePermission($permissionName, $configData->getPermission());
         $this->setDescription($this->getMessage(null, "commands.{$this->getLabel()}.description"));
     }
 
@@ -144,5 +147,35 @@ class BaseCommand extends Command implements PluginOwned{
             $overloads[] = $overload->getParameters();
         }
         return $overloads;
+    }
+
+    public function recalculatePermissions() : void{
+        $configData = $this->getConfigData();
+
+        $this->recalculatePermission($this->getPermission(), $configData->getPermission());
+        foreach($this->getOverloads() as $key => $overload){
+            if(!$overload instanceof NamedOverload)
+                continue;
+
+            $childData = $configData->getChildren($overload->getLabel());
+            if($childData === null)
+                continue;
+
+            $this->recalculatePermission($overload->getPermission(), $childData->getPermission());
+        }
+    }
+
+    public function recalculatePermission(string $permissionName, string $default) : void{
+        $permissionManager = PermissionManager::getInstance();
+        $permission = $permissionManager->getPermission($permissionName);
+        if($permission === null){
+            $permission = new Permission($permissionName);
+            $permissionManager->addPermission($permission);
+        }
+        $permission->setDefault($default);
+    }
+
+    public function getConfigData() : CommandConfigData{
+        return $this->configData;
     }
 }

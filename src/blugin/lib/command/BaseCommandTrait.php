@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\config\CommandConfigTrait;
-use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
 
 /**
@@ -49,26 +48,5 @@ trait BaseCommandTrait{
     public function createCommand(?string $label = null) : BaseCommand{
         $label = trim(strtolower($label ?? $this->getName()));
         return new BaseCommand($label, $this, $this->getCommandConfig()->getData($label));
-    }
-
-    public function recalculatePermissions() : void{
-        $permissionManager = PermissionManager::getInstance();
-        $config = $this->getConfig();
-
-        $defaultValue = $config->getNested("command.permission");
-        if($defaultValue !== null){
-            $permissionManager->getPermission($this->baseCommand->getPermission())->setDefault($defaultValue);
-        }
-        foreach($this->baseCommand->getOverloads() as $key => $overload){
-            $name = $overload->getName();
-            if($name === null)
-                continue;
-
-            $label = strtolower($name);
-            $defaultValue = $config->getNested("command.children.$label.permission");
-            if($defaultValue !== null){
-                $permissionManager->getPermission($overload->getPermission())->setDefault($defaultValue);
-            }
-        }
     }
 }
