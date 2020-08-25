@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
-use blugin\lib\command\parameter\additions\ConstParameter;
 use blugin\lib\command\parameter\Parameter;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
@@ -118,8 +117,12 @@ class BaseCommand extends Command implements PluginOwned{
         return $this->overloads;
     }
 
-    public function addOverload(Overload $overload) : void{
+    public function addOverload(?Overload $overload = null) : Overload{
+        if($overload === null){
+            $overload = new Overload($this);
+        }
         $this->overloads[] = $overload;
+        return $overload;
     }
 
     /**

@@ -42,7 +42,7 @@ abstract class Parameter extends CommandParameter{
     /** @var Enum|null */
     public $enum;
 
-    public function __construct(?Overload $overload = null, string $name = null, bool $optional = false, ?Enum $enum = null){
+    public function __construct(string $name = null, bool $optional = false, ?Enum $enum = null, ?Overload $overload = null){
         $this->overload = $overload;
 
         $this->paramName = $name;
