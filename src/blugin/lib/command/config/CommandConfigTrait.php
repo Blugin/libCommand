@@ -53,10 +53,10 @@ trait CommandConfigTrait{
         if(file_exists($configFile))
             return true;
 
-        $resource = $this->getResource("commmand/{$this->getServer()->getLanguage()->getLang()}.yml");
+        $resource = $this->getResource("command/{$this->getServer()->getLanguage()->getLang()}.yml");
         if($resource === null){
             foreach($this->getResources() as $filePath => $info){
-                if(preg_match('/^commmand\/[a-zA-Z]{3}\.yml$/', $filePath)){
+                if(preg_match('/^command\/[a-zA-Z]{3}\.yml$/', $filePath)){
                     $resource = $this->getResource($filePath);
                     break;
                 }
