@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
+use blugin\lib\command\config\CommandConfigData;
 use blugin\lib\command\parameter\Parameter;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
@@ -42,16 +43,22 @@ class BaseCommand extends Command implements PluginOwned{
     /** @var Overload[] */
     protected $overloads = [];
 
+    /** @var CommandConfigData */
+    protected $configData;
+
     /** @param string[] $aliases */
-    public function __construct(string $name, PluginBase $owner, array $aliases){
+    public function __construct(string $label, PluginBase $owner, CommandConfigData $configData){
         if(!$owner instanceof TranslatorHolder)
             throw new \InvalidArgumentException("BaseCommand's plugin must implement TranslatorHolder.");
 
-        parent::__construct($name, "", null, $aliases);
+        parent::__construct($configData->getName(), "", null, $configData->getAliases());
         $this->owningPlugin = $owner;
+        $this->configData = $configData;
 
-        $this->setPermission("{$this->getLabel()}.cmd");
-        $this->setDescription($owner->getTranslator()->translate("commands.{$this->getLabel()}.description"));
+        $this->setLabel($label);
+        $permissionName = "{$this->getLabel()}.cmd";
+        $this->setPermission($permissionName);
+        $this->setDescription($this->getMessage(null, "commands.{$this->getLabel()}.description"));
     }
 
     /** @param string[] $args */
@@ -99,7 +106,7 @@ class BaseCommand extends Command implements PluginOwned{
             }, $this->overloads)) . ">";
     }
 
-    public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
+    public function getMessage(?CommandSender $sender, string $str, array $params = []) : string{
         $str = $this->owningPlugin->getTranslator()->translateTo($str, $params, $sender);
         return Server::getInstance()->getLanguage()->translateString($str, $params);
     }

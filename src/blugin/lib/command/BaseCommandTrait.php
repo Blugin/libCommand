@@ -25,11 +25,9 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
-use blugin\lib\command\BaseCommand;
 use blugin\lib\command\config\CommandConfigTrait;
 use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
-use pocketmine\Server;
 
 /**
  * This trait override most methods in the {@link PluginBase} abstract class.
@@ -49,7 +47,8 @@ trait BaseCommandTrait{
     }
 
     public function createCommand(?string $label = null) : BaseCommand{
-        return new BaseCommand(trim(strtolower($label ?? $this->getName())), $this, $this->getConfig()->getNested("command.aliases", []));
+        $label = trim(strtolower($label ?? $this->getName()));
+        return new BaseCommand($label, $this, $this->getCommandConfig()->getData($label));
     }
 
     public function recalculatePermissions() : void{
