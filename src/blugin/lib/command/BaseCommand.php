@@ -122,18 +122,19 @@ class BaseCommand extends Command implements PluginOwned{
         return $overload;
     }
 
+    public function addNamedOverload(string $name) : NamedOverload{
+        $overload = new NamedOverload($this, $name);
+        $this->overloads[] = $overload;
+        return $overload;
+    }
+
     /**
      * @return Parameter[][]
      */
     public function asOverloadsArray() : array{
         $overloads = [];
         foreach($this->overloads as $overload){
-            $parameters = $overload->getParameters();
-            $name = $overload->getName();
-            if($name !== null){
-                array_unshift($parameters, $overload->getNameParameter());
-            }
-            $overloads[] = $parameters;
+            $overloads[] = $overload->getParameters();
         }
         return $overloads;
     }

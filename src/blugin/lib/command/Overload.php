@@ -27,7 +27,6 @@ namespace blugin\lib\command;
 
 use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
-use blugin\lib\command\parameter\additions\ConstParameter;
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
@@ -41,15 +40,6 @@ class Overload{
     /** @var BaseCommand */
     protected $baseCommand;
 
-    /** @var string|null */
-    protected $name;
-
-    /** @var string|null */
-    protected $label;
-
-    /** @var string[] */
-    private $aliases = [];
-
     /** @var Parameter[] */
     protected $parameters = [];
 
@@ -59,9 +49,8 @@ class Overload{
     /** @var ICommandHandler|null */
     protected $handler = null;
 
-    public function __construct(BaseCommand $baseCommand, ?string $name = null){
+    public function __construct(BaseCommand $baseCommand){
         $this->baseCommand = $baseCommand;
-        $this->setName($name);
     }
 
     public function getBaseCommand() : BaseCommand{
@@ -74,49 +63,11 @@ class Overload{
     }
 
     public function getFullMessage(string $str) : string{
-        return "commands.{$this->baseCommand->getLabel()}." . ($this->name === null ? "" : strtolower($this->name . ".")) . "$str";
-    }
-
-    public function getName() : ?string{
-        return $this->name;
-    }
-
-    public function setName(?string $name) : Overload{
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getNameParameter(?bool $exact = false, ?string $name = null) : ?ConstParameter{
-        return $this->name === null ? null : (new ConstParameter($name ?? $this->name))->setOverload($this)->setExact($exact);
-    }
-
-    public function testName(CommandSender $sender, ?string $name) : bool{
-        if($name === null)
-            return false;
-
-        if($this->getNameParameter()->parseSilent($sender, $name) !== null)
-            return true;
-
-        foreach($this->aliases as $alias){
-            if($this->getNameParameter(false, $alias)->parseSilent($sender, $name) !== null)
-                return true;
-        }
-        return false;
-    }
-
-    /** @return string[] */
-    public function getAliases() : array{
-        return $this->aliases;
-    }
-
-    /** @param string[] $aliases */
-    public function setAliases(array $aliases) : Overload{
-        $this->aliases = $aliases;
-        return $this;
+        return "commands.{$this->baseCommand->getLabel()}." . "$str";
     }
 
     public function getPermission() : string{
-        return $this->name !== null ? $this->baseCommand->getPermission() . "." . $this->name : "";
+        return $this->baseCommand->getPermission();
     }
 
     public function testPermission(CommandSender $sender) : bool{
@@ -174,22 +125,13 @@ class Overload{
     }
 
     public function toUsageString() : string{
-        $usage = "";
-        if($this->name !== null){
-            $usage .= $this->name;
-        }
-
-        foreach($this->parameters as $parameter){
-            $usage .= " " . $parameter->toUsageString();
-        }
-        return $usage;
+        return implode(" ", array_map(function(Parameter $parameter) : string{
+            return $parameter->toUsageString();
+        }, $this->parameters));
     }
 
     /** @param string[] $args */
     public function valid(CommandSender $sender, array $args) : bool{
-        if($this->name !== null)
-            return $this->testName($sender, array_shift($args));
-
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
 
@@ -216,9 +158,6 @@ class Overload{
      * @return mixed[]|int name => value. if parse failed return int
      */
     public function parse(CommandSender $sender, array $args){
-        if($this->name !== null && !$this->testName($sender, array_shift($args)))
-            return self::ERROR_NAME_MISMATCH;
-
         if(!$this->testPermission($sender))
             return self::ERROR_PERMISSION_DENIED;
 
