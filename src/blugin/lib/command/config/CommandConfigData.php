@@ -29,6 +29,9 @@ use pocketmine\permission\PermissionParser;
 
 class CommandConfigData{
     /** @var string */
+    protected $label;
+
+    /** @var string */
     protected $name;
 
     /** @var string */
@@ -40,7 +43,9 @@ class CommandConfigData{
     /** @var CommandConfigData[] */
     protected $childrens = [];
 
-    public function __construct(array $configData){
+    public function __construct(string $label, array $configData){
+        $this->label = $label;
+
         if(!isset($configData["name"]))
             throw new CommandConfigException("Command configuration must have \"name\" string");
 
@@ -76,6 +81,10 @@ class CommandConfigData{
         }
     }
 
+    public function getLabel() : string{
+        return $this->label;
+    }
+
     public function getName() : string{
         return $this->name;
     }
@@ -105,12 +114,12 @@ class CommandConfigData{
      */
     public static function parse(array $dataMap) : array{
         $result = [];
-        foreach($dataMap as $dataConfig){
+        foreach($dataMap as $label => $dataConfig){
             if(!is_array($dataConfig))
                 throw new CommandConfigException("data is must be array, " . gettype($dataConfig) . " given");
 
-            $data = new CommandConfigData($dataConfig);
-            $result[$data->getName()] = $data;
+            $data = new CommandConfigData((string) $label, $dataConfig);
+            $result[$data->getLabel()] = $data;
         }
         return $result;
     }
