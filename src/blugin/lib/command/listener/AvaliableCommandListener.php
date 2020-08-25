@@ -25,7 +25,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\traits;
+namespace blugin\lib\command\listener;
 
 use blugin\lib\command\BaseCommand;
 use pocketmine\event\Listener;
