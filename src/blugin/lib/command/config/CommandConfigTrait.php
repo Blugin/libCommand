@@ -32,9 +32,12 @@ use pocketmine\plugin\PluginBase;
  */
 trait CommandConfigTrait{
     /** @var CommandConfig */
-    private $commandConfig;
+    private $commandConfig = null;
 
     public function getCommandConfig() : CommandConfig{
+        if($this->commandConfig === null){
+            $this->loadCommandConfig();
+        }
         return $this->commandConfig;
     }
 
