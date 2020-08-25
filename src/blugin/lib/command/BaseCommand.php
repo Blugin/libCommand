@@ -105,7 +105,7 @@ class BaseCommand extends Command implements PluginOwned{
             return "$usage {$this->overloads[0]->toUsageString()}";
 
         return "$usage <" . implode(" | ", array_map(function(Overload $overload) : string{
-                return $overload->getName() ?? $overload->toUsageString();
+                return $overload instanceof NamedOverload ? $overload->getName() : $overload->toUsageString();
             }, $this->overloads)) . ">";
     }
 
