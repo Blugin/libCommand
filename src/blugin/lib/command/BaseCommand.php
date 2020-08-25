@@ -42,8 +42,8 @@ use pocketmine\utils\TextFormat;
 class BaseCommand extends Command implements PluginOwned{
     use PluginOwnedTrait;
 
-    /** @var ParameterLine[] */
-    private $parameterLines = [];
+    /** @var Overload[] */
+    private $overloads = [];
 
     public function __construct(string $name, PluginBase $owner){
         parent::__construct($name);
@@ -60,24 +60,24 @@ class BaseCommand extends Command implements PluginOwned{
         if(!$this->owningPlugin->isEnabled() || !$this->testPermission($sender))
             return false;
 
-        if(empty($this->parameterLines))
+        if(empty($this->overloads))
             return false;
 
-        foreach($this->parameterLines as $key => $parameterLine){
-            if($parameterLine->valid($sender, $args)){
-                $result = $parameterLine->parse($sender, $args);
+        foreach($this->overloads as $key => $overload){
+            if($overload->valid($sender, $args)){
+                $result = $overload->parse($sender, $args);
                 switch($result){
-                    case ParameterLine::ERROR_NAME_MISMATCH:
+                    case Overload::ERROR_NAME_MISMATCH:
                         break;
-                    case ParameterLine::ERROR_PARAMETER_INVALID:
-                    case ParameterLine::ERROR_PARAMETER_INSUFFICIENT:
-                        $this->sendMessage($sender, "commands.generic.usage", ["/{$this->getName()} " . $parameterLine->toUsageString()]);
+                    case Overload::ERROR_PARAMETER_INVALID:
+                    case Overload::ERROR_PARAMETER_INSUFFICIENT:
+                        $this->sendMessage($sender, "commands.generic.usage", ["/{$this->getName()} " . $overload->toUsageString()]);
                         return true;
-                    case ParameterLine::ERROR_PERMISSION_DENIED:
+                    case Overload::ERROR_PERMISSION_DENIED:
                         $this->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
                         return true;
                     default:
-                        return is_numeric($result) ? true : $parameterLine->onParse($sender, $result);
+                        return is_numeric($result) ? true : $overload->onParse($sender, $result);
                 }
             }
         }
@@ -88,16 +88,16 @@ class BaseCommand extends Command implements PluginOwned{
     public function getUsage() : string{
         $usage = "/{$this->getName()}";
 
-        $count = count($this->parameterLines);
+        $count = count($this->overloads);
         if($count === 0)
             return $usage;
 
         if($count === 1)
-            return "$usage {$this->parameterLines[0]->toUsageString()}";
+            return "$usage {$this->overloads[0]->toUsageString()}";
 
-        return "$usage <" . implode(" | ", array_map(function(ParameterLine $parameterLine) : string{
-                return $parameterLine->getName() ?? $parameterLine->toUsageString();
-            }, $this->parameterLines)) . ">";
+        return "$usage <" . implode(" | ", array_map(function(Overload $overload) : string{
+                return $overload->getName() ?? $overload->toUsageString();
+            }, $this->overloads)) . ">";
     }
 
     public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
@@ -113,13 +113,13 @@ class BaseCommand extends Command implements PluginOwned{
         $sender->sendMessage(new TranslationContainer($this->getMessage($sender, $str, $params), $params));
     }
 
-    /** @return ParameterLine[] */
-    public function getParameterLines() : array{
-        return $this->parameterLines;
+    /** @return Overload[] */
+    public function getOverloads() : array{
+        return $this->overloads;
     }
 
-    public function addParameterLine(ParameterLine $parameterLine) : void{
-        $this->parameterLines[] = $parameterLine;
+    public function addOverload(Overload $overload) : void{
+        $this->overloads[] = $overload;
     }
 
     /**
@@ -127,11 +127,11 @@ class BaseCommand extends Command implements PluginOwned{
      */
     public function asOverloadsArray() : array{
         $overloads = [];
-        foreach($this->parameterLines as $line){
-            $parameters = $line->getParameters();
-            $name = $line->getName();
+        foreach($this->overloads as $overload){
+            $parameters = $overload->getParameters();
+            $name = $overload->getName();
             if($name !== null){
-                array_unshift($parameters, new ConstParameter($line, $name));
+                array_unshift($parameters, new ConstParameter($overload, $name));
             }
             $overloads[] = $parameters;
         }

@@ -63,7 +63,7 @@ trait SubcommandTrait{
         if($defaultValue !== null){
             $permissionManager->getPermission($this->baseCommand->getPermission())->setDefault($defaultValue);
         }
-        foreach($this->baseCommand->getParameterLines() as $key => $subcommand){
+        foreach($this->baseCommand->getOverloads() as $key => $subcommand){
             $label = strtolower($subcommand->getName());
             $defaultValue = $config->getNested("command.children.$label.permission");
             if($defaultValue !== null){

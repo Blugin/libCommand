@@ -27,14 +27,14 @@ namespace blugin\lib\command\parameter;
 
 use blugin\lib\command\BaseCommand;
 use blugin\lib\command\enum\Enum;
-use blugin\lib\command\ParameterLine;
+use blugin\lib\command\Overload;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
 
 abstract class Parameter extends CommandParameter{
-    /** @var ParameterLine|null */
-    protected $owningLine = null;
+    /** @var Overload|null */
+    protected $overload = null;
 
     /** @var int length of parameter */
     protected $length = 1;
@@ -42,8 +42,8 @@ abstract class Parameter extends CommandParameter{
     /** @var Enum|null */
     public $enum;
 
-    public function __construct(?ParameterLine $owningLine = null, string $name = null, bool $optional = false, ?Enum $enum = null){
-        $this->owningLine = $owningLine;
+    public function __construct(?Overload $overload = null, string $name = null, bool $optional = false, ?Enum $enum = null){
+        $this->overload = $overload;
 
         $this->paramName = $name;
         $this->isOptional = $optional;
@@ -53,17 +53,17 @@ abstract class Parameter extends CommandParameter{
         $this->flags = $this->getFlags();
     }
 
-    public function getOwningLine() : ?ParameterLine{
-        return $this->owningLine;
+    public function getOverload() : ?Overload{
+        return $this->overload;
     }
 
-    public function setOwningLine(ParameterLine $owningLine) : Parameter{
-        $this->owningLine = $owningLine;
+    public function setOverload(Overload $overload) : Parameter{
+        $this->overload = $overload;
         return $this;
     }
 
     public function getBaseCommand() : ?BaseCommand{
-        return $this->owningLine !== null ? $this->owningLine->getBaseCommand() : null;
+        return $this->overload !== null ? $this->overload->getBaseCommand() : null;
     }
 
     /** @param string[] $params */

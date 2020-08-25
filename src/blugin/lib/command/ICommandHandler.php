@@ -33,5 +33,5 @@ interface ICommandHandler{
     /**
      * @param mixed[] $args name => value
      */
-    public function handle(CommandSender $sender, array $args, ParameterLine $line) : bool;
+    public function handle(CommandSender $sender, array $args, Overload $overload) : bool;
 }

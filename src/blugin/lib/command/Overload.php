@@ -29,7 +29,7 @@ use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
-class ParameterLine{
+class Overload{
     public const ERROR_NAME_MISMATCH = -1;
     public const ERROR_PARAMETER_INSUFFICIENT = -2;
     public const ERROR_PARAMETER_INVALID = -3;
@@ -76,7 +76,7 @@ class ParameterLine{
         return $this->name;
     }
 
-    public function setName(?string $name) : ParameterLine{
+    public function setName(?string $name) : Overload{
         $this->name = $name;
         return $this;
     }
@@ -106,7 +106,7 @@ class ParameterLine{
     }
 
     /** @param string[] $aliases */
-    public function setAliases(array $aliases) : ParameterLine{
+    public function setAliases(array $aliases) : Overload{
         $this->aliases = $aliases;
         return $this;
     }
@@ -128,7 +128,7 @@ class ParameterLine{
         return $this->parameters;
     }
 
-    public function addParamater(Parameter $parameter) : ParameterLine{
+    public function addParamater(Parameter $parameter) : Overload{
         $index = count($this->parameters);
         $before = $this->parameters[$index - 1] ?? null;
         if($before instanceof Parameter){
@@ -145,7 +145,7 @@ class ParameterLine{
         }
 
 
-        $parameter->setOwningLine($this);
+        $parameter->setOverload($this);
         $this->parameters[] = $parameter;
         if(!$parameter->isOptional()){
             $this->requireLength += $parameter->getLength();
@@ -161,7 +161,7 @@ class ParameterLine{
         return $this->handler;
     }
 
-    public function setHandler(?ICommandHandler $handler) : ParameterLine{
+    public function setHandler(?ICommandHandler $handler) : Overload{
         $this->handler = $handler;
         return $this;
     }
