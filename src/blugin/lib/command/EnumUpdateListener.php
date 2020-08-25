@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\enum\Enum;
+use blugin\lib\command\enum\EnumFactory;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -40,7 +41,7 @@ class EnumUpdateListener implements Listener{
      */
     public function onPlayerJoin(PlayerJoinEvent $event) : void{
         $player = $event->getPlayer();
-        Enum::create(Enum::PLAYERS)->set(strtolower($player->getName()), $player);
+        EnumFactory::getInstance()->get(Enum::PLAYERS)->set(strtolower($player->getName()), $player);
     }
 
     /**
@@ -48,7 +49,7 @@ class EnumUpdateListener implements Listener{
      */
     public function onPlayerQuit(PlayerQuitEvent $event) : void{
         $player = $event->getPlayer();
-        Enum::create(Enum::PLAYERS)->remove(strtolower($player->getName()));
+        EnumFactory::getInstance()->get(Enum::PLAYERS)->remove(strtolower($player->getName()));
     }
 
     /**
@@ -56,7 +57,7 @@ class EnumUpdateListener implements Listener{
      */
     public function onWorldLoad(WorldLoadEvent $event) : void{
         $world = $event->getWorld();
-        Enum::create(Enum::WORLDS)->set(strtolower($world->getFolderName()), $world);
+        EnumFactory::getInstance()->get(Enum::WORLDS)->set(strtolower($world->getFolderName()), $world);
     }
 
     /**
@@ -64,6 +65,6 @@ class EnumUpdateListener implements Listener{
      */
     public function onWorldUnload(WorldUnloadEvent $event) : void{
         $world = $event->getWorld();
-        Enum::create(Enum::WORLDS)->remove(strtolower($world->getFolderName()));
+        EnumFactory::getInstance()->get(Enum::WORLDS)->remove(strtolower($world->getFolderName()));
     }
 }

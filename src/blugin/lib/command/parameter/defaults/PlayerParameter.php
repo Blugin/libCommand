@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\parameter\defaults;
 
 use blugin\lib\command\enum\Enum;
+use blugin\lib\command\enum\EnumFactory;
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
@@ -47,7 +48,7 @@ class PlayerParameter extends EnumParameter{
     }
 
     public function prepare() : Parameter{
-        $this->enum = Enum::create($this->isIncludeOffline() ? Enum::PLAYERS_INCLUE_OFFLINE : Enum::PLAYERS);
+        $this->enum = EnumFactory::getInstance()->get($this->isIncludeOffline() ? Enum::PLAYERS_INCLUE_OFFLINE : Enum::PLAYERS);
         return $this;
     }
 
