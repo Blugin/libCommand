@@ -71,7 +71,7 @@ abstract class EnumParameter extends Parameter{
             $length = strlen($argument);
             $minDiff = PHP_INT_MAX;
             foreach($this->enum->getAll() as $name => $value){
-                if(($this->isCaseSensitive() ? strpos($argument, $name) : stripos($argument, $name)) === 0){
+                if(($this->isCaseSensitive() ? strpos($name, $argument) : stripos($name, $argument)) === 0){
                     $diff = strlen($name) - $length;
                     if($diff < $minDiff){
                         $found = $value;

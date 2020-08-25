@@ -131,7 +131,7 @@ class BaseCommand extends Command implements PluginOwned{
             $parameters = $overload->getParameters();
             $name = $overload->getName();
             if($name !== null){
-                array_unshift($parameters, new ConstParameter($overload, $name));
+                array_unshift($parameters, $overload->getNameParameter());
             }
             $overloads[] = $parameters;
         }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command;
 
+use blugin\lib\command\parameter\additions\ConstParameter;
 use blugin\lib\command\parameter\Parameter;
 use blugin\lib\command\traits\ICommandHandler;
 use pocketmine\command\CommandSender;
@@ -82,20 +83,19 @@ class Overload{
         return $this;
     }
 
-    /** @param string[] $args */
-    public function testName(array $args) : bool{
-        if($this->name === null)
-            return true;
+    public function getNameParameter(?bool $exact = false, ?string $name = null) : ?ConstParameter{
+        return $this->name === null ? null : (new ConstParameter($this, $name ?? $this->name))->setExact($exact);
+    }
 
-        $name = array_shift($args);
+    public function testName(CommandSender $sender, ?string $name) : bool{
         if($name === null)
             return false;
 
-        if(strcasecmp($this->name, $name) === 0)
+        if($this->getNameParameter()->parseSilent($sender, $name) !== null)
             return true;
 
         foreach($this->aliases as $alias){
-            if(strcasecmp($alias, $name) === 0)
+            if($this->getNameParameter(false, $alias)->parseSilent($sender, $name) !== null)
                 return true;
         }
         return false;
@@ -145,7 +145,6 @@ class Overload{
             }
         }
 
-
         $parameter->setOverload($this);
         $this->parameters[] = $parameter;
         if(!$parameter->isOptional()){
@@ -181,10 +180,9 @@ class Overload{
 
     /** @param string[] $args */
     public function valid(CommandSender $sender, array $args) : bool{
-        if(!$this->testName($args))
-            return false;
+        if($this->name !== null)
+            return $this->testName($sender, array_shift($args));
 
-        array_shift($args);
         $requireCount = $this->getRequireLength();
         $argsCount = count($args);
 
@@ -211,10 +209,9 @@ class Overload{
      * @return mixed[]|int name => value. if parse failed return int
      */
     public function parse(CommandSender $sender, array $args){
-        if(!$this->testName($args))
-            return self::ERROR_NAME_MISMATCH;
+        if($this->name !== null && !$this->testName($sender, array_shift($args)))
+            return self::ERROR_NAME_MISMATCH;;
 
-        array_shift($args);
         if(!$this->testPermission($sender))
             return self::ERROR_PERMISSION_DENIED;
 
