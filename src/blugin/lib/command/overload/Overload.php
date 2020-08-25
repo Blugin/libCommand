@@ -95,7 +95,7 @@ class Overload{
                 throw new \RuntimeException("You can't register not-optional parameter after optional parameter");
 
             foreach($this->parameters as $oldParam){
-                if($oldParam->getName() === $parameter->getName())
+                if($oldParam->getLabel() === $parameter->getLabel())
                     throw new \RuntimeException("You can't register multiple parameters with the same name");
             }
         }
@@ -179,7 +179,7 @@ class Overload{
                 return self::ERROR_PARAMETER_INVALID;
 
             $offset += $parameter->getLength();
-            $results[$parameter->getName()] = $result;
+            $results[$parameter->getLabel()] = $result;
         }
         return $results;
     }
