@@ -65,11 +65,15 @@ trait SubcommandTrait{
         if($defaultValue !== null){
             $permissionManager->getPermission($this->baseCommand->getPermission())->setDefault($defaultValue);
         }
-        foreach($this->baseCommand->getOverloads() as $key => $subcommand){
-            $label = strtolower($subcommand->getName());
+        foreach($this->baseCommand->getOverloads() as $key => $overload){
+            $name = $overload->getName();
+            if($name === null)
+                continue;
+
+            $label = strtolower($name);
             $defaultValue = $config->getNested("command.children.$label.permission");
             if($defaultValue !== null){
-                $permissionManager->getPermission($subcommand->getPermission())->setDefault($defaultValue);
+                $permissionManager->getPermission($overload->getPermission())->setDefault($defaultValue);
             }
         }
     }
