@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\parameter\Parameter;
+use blugin\lib\command\traits\ICommandHandler;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 

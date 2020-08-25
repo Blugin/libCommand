@@ -25,7 +25,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command;
+namespace blugin\lib\command\traits;
 
 use blugin\lib\command\enum\Enum;
 use blugin\lib\command\enum\EnumFactory;

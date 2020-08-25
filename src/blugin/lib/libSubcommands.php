@@ -27,8 +27,8 @@ declare(strict_types=1);
 
 namespace blugin\lib;
 
-use blugin\lib\command\AvaliableCommandListener;
-use blugin\lib\command\EnumUpdateListener;
+use blugin\lib\command\traits\AvaliableCommandListener;
+use blugin\lib\command\traits\EnumUpdateListener;
 use pocketmine\event\Listener;
 use pocketmine\plugin\PluginBase;
 

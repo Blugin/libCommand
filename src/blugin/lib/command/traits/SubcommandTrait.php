@@ -25,10 +25,12 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command;
+namespace blugin\lib\command\traits;
 
+use blugin\lib\command\BaseCommand;
 use pocketmine\permission\PermissionManager;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 
 /**
  * This trait override most methods in the {@link PluginBase} abstract class.
@@ -77,10 +79,10 @@ trait SubcommandTrait{
     }
 
     public function onEnable() : void{
-        $this->getServer()->getCommandMap()->register($this->getName(), $this->getBaseCommand());
+        Server::getInstance()->getCommandMap()->register($this->getName(), $this->getBaseCommand());
     }
 
     public function onDisble() : void{
-        $this->getServer()->getCommandMap()->unregister($this->getBaseCommand());
+        Server::getInstance()->getCommandMap()->unregister($this->getBaseCommand());
     }
 }

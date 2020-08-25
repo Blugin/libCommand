@@ -25,8 +25,9 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command;
+namespace blugin\lib\command\traits;
 
+use blugin\lib\command\Overload;
 use pocketmine\command\CommandSender;
 
 interface ICommandHandler{
