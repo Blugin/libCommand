@@ -38,7 +38,7 @@ class NamedOverload extends Overload{
     /** @var string[] */
     private $aliases = [];
 
-    public function __construct(BaseCommand $baseCommand, string $name = null){
+    public function __construct(BaseCommand $baseCommand, string $name){
         $this->baseCommand = $baseCommand;
         $this->setLabel($name);
         $this->setName($name);
