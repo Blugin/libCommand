@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace blugin\lib\command\parameter;
 
 use blugin\lib\command\BaseCommand;
+use blugin\lib\command\enum\Enum;
 use blugin\lib\command\ParameterLine;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
-use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 use pocketmine\network\mcpe\protocol\types\command\CommandParameter;
 
 abstract class Parameter extends CommandParameter{
@@ -39,7 +39,10 @@ abstract class Parameter extends CommandParameter{
     /** @var int length of parameter */
     protected $length = 1;
 
-    public function __construct(?ParameterLine $owningLine = null, string $name = null, bool $optional = false, ?CommandEnum $enum = null){
+    /** @var Enum|null */
+    public $enum;
+
+    public function __construct(?ParameterLine $owningLine = null, string $name = null, bool $optional = false, ?Enum $enum = null){
         $this->owningLine = $owningLine;
 
         $this->paramName = $name;
@@ -94,11 +97,11 @@ abstract class Parameter extends CommandParameter{
         return $this->flags;
     }
 
-    public function getEnum() : ?CommandEnum{
+    public function getEnum() : ?Enum{
         return $this->enum;
     }
 
-    public function setEnum(?CommandEnum $enum) : Parameter{
+    public function setEnum(?Enum $enum) : Parameter{
         $this->enum = $enum;
         return $this;
     }

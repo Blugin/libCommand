@@ -25,11 +25,10 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\parameter\defaults;
 
+use blugin\lib\command\enum\Enum;
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
-use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
-use pocketmine\Server;
 
 class PlayerParameter extends EnumParameter{
     /** @var bool Whether to include offline players */
@@ -48,27 +47,7 @@ class PlayerParameter extends EnumParameter{
     }
 
     public function prepare() : Parameter{
-        $playerNames = [];
-        foreach(Server::getInstance()->getOnlinePlayers() as $key => $player){
-            $playerName = $player->getName();
-            $playerNames[strtolower($playerName)] = $playerName;
-        }
-        if($this->isIncludeOffline()){
-            foreach(scandir(Server::getInstance()->getDataPath() . "players/") as $key => $fileName){
-                if(substr($fileName, -4) === ".dat"){
-                    $playerName = substr($fileName, 0, -4);
-                    if(!isset($playerNames[strtolower($playerName)])){
-                        $playerNames[strtolower($playerName)] = $playerName;
-                    }
-                }
-            }
-        }
-        $this->enum = new CommandEnum("target", array_map(function(string $playerName) : string{
-            if(strpos($playerName, " ") !== false)
-                return "\"$playerName\"";
-
-            return $playerName;
-        }, array_values($playerNames)));
+        $this->enum = Enum::create($this->isIncludeOffline() ? Enum::PLAYERS_INCLUE_OFFLINE : Enum::PLAYERS);
         return $this;
     }
 

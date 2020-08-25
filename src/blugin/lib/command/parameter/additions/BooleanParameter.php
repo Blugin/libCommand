@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\parameter\additions;
 
+use blugin\lib\command\enum\Enum;
 use blugin\lib\command\parameter\defaults\EnumParameter;
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
-use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 
 class BooleanParameter extends EnumParameter{
     public function getTypeName() : string{
@@ -40,13 +40,7 @@ class BooleanParameter extends EnumParameter{
     }
 
     public function prepare() : Parameter{
-        $this->enum = new CommandEnum("Boolean", ["true", "false"]);
+        $this->enum = Enum::create(Enum::BOOLEAN);
         return $this;
-    }
-
-    /** @return bool|null */
-    public function parseSilent(CommandSender $sender, string $argument){
-        $result = parent::parseSilent($sender, $argument);
-        return $result === null ? null : $result === "true";
     }
 }

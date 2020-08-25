@@ -27,6 +27,7 @@ namespace blugin\lib\command\parameter\defaults;
 
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
+use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
 abstract class EnumParameter extends Parameter{
     /** @var bool Whether it should be written in exactly full name */
@@ -36,7 +37,7 @@ abstract class EnumParameter extends Parameter{
     protected $caseSensitive = false;
 
     public function getType() : int{
-        return -1;
+        return AvailableCommandsPacket::ARG_TYPE_STRING;
     }
 
     public function getTypeName() : string{
@@ -54,12 +55,12 @@ abstract class EnumParameter extends Parameter{
         return $this->isOptional() ? "[$name]" : "<$name>";
     }
 
-    /** @return string|null */
+    /** @return mixed|null */
     public function parseSilent(CommandSender $sender, string $argument){
         if($this->enum !== null){
             if($this->isExact()){
-                foreach($this->enum->getValues() as $value){
-                    if(($this->isCaseSensitive() ? strcmp($argument, $value) : strcasecmp($argument, $value)) === 0){
+                foreach($this->enum->getAll() as $name => $value){
+                    if(($this->isCaseSensitive() ? strcmp($argument, $name) : strcasecmp($argument, $name)) === 0){
                         return $value;
                     }
                 }
@@ -69,9 +70,9 @@ abstract class EnumParameter extends Parameter{
             $found = null;
             $length = strlen($argument);
             $minDiff = PHP_INT_MAX;
-            foreach($this->enum->getValues() as $value){
-                if(($this->isCaseSensitive() ? strpos($argument, $value) : stripos($argument, $value)) === 0){
-                    $diff = strlen($value) - $length;
+            foreach($this->enum->getAll() as $name => $value){
+                if(($this->isCaseSensitive() ? strpos($argument, $name) : stripos($argument, $name)) === 0){
+                    $diff = strlen($name) - $length;
                     if($diff < $minDiff){
                         $found = $value;
                         if($diff === 0)
