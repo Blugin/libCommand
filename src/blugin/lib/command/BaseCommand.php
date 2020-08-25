@@ -129,13 +129,17 @@ class BaseCommand extends Command implements PluginOwned{
             $overload = new Overload($this);
         }
         $this->overloads[] = $overload;
+        if($overload instanceof NamedOverload){
+            $childData = $this->getConfigData()->getChildren($overload->getLabel());
+            $overload->setName($childData->getName());
+            $overload->setAliases($childData->getAliases());
+            $this->recalculatePermission($overload->getPermission(), $childData->getPermission());
+        }
         return $overload;
     }
 
-    public function addNamedOverload(string $name) : NamedOverload{
-        $overload = new NamedOverload($this, $name);
-        $this->overloads[] = $overload;
-        return $overload;
+    public function addNamedOverload(string $name) : Overload{
+        return $this->addOverload(new NamedOverload($this, $name));
     }
 
     /**
@@ -147,22 +151,6 @@ class BaseCommand extends Command implements PluginOwned{
             $overloads[] = $overload->getParameters();
         }
         return $overloads;
-    }
-
-    public function recalculatePermissions() : void{
-        $configData = $this->getConfigData();
-
-        $this->recalculatePermission($this->getPermission(), $configData->getPermission());
-        foreach($this->getOverloads() as $key => $overload){
-            if(!$overload instanceof NamedOverload)
-                continue;
-
-            $childData = $configData->getChildren($overload->getLabel());
-            if($childData === null)
-                continue;
-
-            $this->recalculatePermission($overload->getPermission(), $childData->getPermission());
-        }
     }
 
     public function recalculatePermission(string $permissionName, string $default) : void{
