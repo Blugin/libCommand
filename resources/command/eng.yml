@@ -1,4 +1,4 @@
-# Advanced configuration file for libSubcommands plugin
+# Advanced configuration file for libCommand plugin
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically on this file when upgrading
 # This file is an example so it doesn't really work
