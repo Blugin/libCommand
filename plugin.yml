@@ -1,10 +1,10 @@
 ---
-name: libSubcommands
-main: blugin\lib\libSubcommands
+name: libCommand
+main: blugin\lib\libCommand
 version: 1.0.0
 api: [4.0.0]
 authors: ['Blugin-team', 'PresentKim']
-description: "[lib] Library to make subcommands of plug-in commands structured"
+description: "[lib] Command library with multiple functions"
 depend: [libTranslator]
 mcpe-protocol: [407, 408]
 ...
