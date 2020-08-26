@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\enum;
 
-use pocketmine\player\Player;
+use pocketmine\Player;
 use pocketmine\Server;
 
 class EnumFactory{
@@ -68,7 +68,7 @@ class EnumFactory{
 
         $worldsEnum = $this->set(Enum::WORLDS);
         $worlds = [];
-        foreach(Server::getInstance()->getWorldManager()->getWorlds() as $world){
+        foreach(Server::getInstance()->getLevels() as $world){
             $worldName = strtolower($world->getFolderName());
             $worlds[$worldName] = $world;
         }

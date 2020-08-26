@@ -26,12 +26,11 @@ declare(strict_types=1);
 namespace blugin\lib\command\config;
 
 use pocketmine\plugin\PluginBase;
-use pocketmine\plugin\PluginOwned;
-use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\utils\Config;
 
-class CommandConfig extends Config implements PluginOwned{
-    use PluginOwnedTrait;
+class CommandConfig extends Config{
+    /** @var PluginBase */
+    protected $owningPlugin;
 
     /** @var CommandConfigData[] name => command config data */
     protected $dataMap;
@@ -49,5 +48,9 @@ class CommandConfig extends Config implements PluginOwned{
 
     public function getData(string $name) : ?CommandConfigData{
         return $this->dataMap[$name] ?? null;
+    }
+
+    public function getOwningPlugin() : PluginBase{
+        return $this->owningPlugin;
     }
 }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\config;
 
-use pocketmine\permission\PermissionParser;
+use pocketmine\permission\Permission;
 
 class CommandConfigData{
     /** @var string */
@@ -55,10 +55,11 @@ class CommandConfigData{
         $this->name = (string) $configData["name"];
 
         if(isset($configData["permission"])){
-            if(!isset(PermissionParser::DEFAULT_STRING_MAP[$configData["permission"]]))
+            try{
+                $this->permission = (string) Permission::getByName($configData["permission"]);
+            }catch(\InvalidArgumentException $e){
                 throw new CommandConfigException("Invalid permission name : \"{$configData["permission"]}}\" ");
-
-            $this->permission = (string) $configData["permission"];
+            }
         }
 
         if(isset($configData["aliases"])){
