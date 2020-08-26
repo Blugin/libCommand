@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\translator;
+namespace blugin\lib\command\translator;
 
 class Language{
     /** @var string locale name */

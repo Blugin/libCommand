@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\translator;
+namespace blugin\lib\command\translator;
 
 interface TranslatorHolder{
     public function getTranslator() : Translator;

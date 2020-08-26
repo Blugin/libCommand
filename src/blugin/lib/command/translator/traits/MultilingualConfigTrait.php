@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\translator\traits;
+namespace blugin\lib\command\translator\traits;
 
 use pocketmine\plugin\PluginBase;
 
