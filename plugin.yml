@@ -5,6 +5,5 @@ version: 1.0.0
 api: [3.0.0]
 authors: ['Blugin-team', 'PresentKim']
 description: "[lib] Command library with multiple functions"
-depend: [libTranslator]
 mcpe-protocol: [407, 408]
 ...
