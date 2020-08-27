@@ -173,8 +173,10 @@ class Overload{
             if($offset > $argsCount)
                 break;
 
-            if($parameter->isOptional() && empty($args[$offset]))
+            if($parameter->isOptional() && empty($args[$offset])){
+                $results[$parameter->getLabel()] = $parameter->getDefault();
                 break;
+            }
 
             $argument = implode(" ", array_slice($args, $offset, $parameter->getLength()));
             $result = $parameter->parse($sender, $argument);
