@@ -45,6 +45,9 @@ abstract class Parameter extends CommandParameter{
     /** @var Enum|null */
     public $enum;
 
+    /** @var mixed */
+    protected $default = null;
+
     public function __construct(string $name = null, bool $optional = false, ?Enum $enum = null, ?Overload $overload = null){
         $this->overload = $overload;
 
@@ -107,6 +110,15 @@ abstract class Parameter extends CommandParameter{
 
     public function setEnum(?Enum $enum) : Parameter{
         $this->enum = $enum;
+        return $this;
+    }
+
+    public function getDefault(){
+        return $this->default;
+    }
+
+    public function setDefault($default) : Parameter{
+        $this->default = $default;
         return $this;
     }
 
