@@ -41,6 +41,7 @@ class Enum extends CommandEnum{
     public function __construct(string $name, ?array $values = null){
         $this->enumName = $name;
         $this->values = $values ?? [];
+        $this->enumValues = $this->getValues();
     }
 
     public function getName() : string{
