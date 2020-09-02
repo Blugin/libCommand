@@ -3,10 +3,10 @@
 # New settings/defaults won't appear automatically on this file when upgrading
 # This file is an example so it doesn't really work
 
-libsubcommands:
+example:
   #Name of main command
   #You can change this to be what you want
-  name: "libsubcommands"
+  name: "example"
 
   #Permission of main command
   #You can change this to be what you want
@@ -14,20 +14,20 @@ libsubcommands:
 
   #Aliases of main command
   #You can add, replace, or remove them as you like
-  aliases: ["subcommands", "subcmd"]
+  aliases: ["examplecommand", "예제"]
 
   children:
     #Setting of subcommands
     #Same as main command setting
     move:
       name: "Move"
-      aliases: ["Teleport"]
+      aliases: ["Teleport", "이동"]
       permission: "op"
     tell:
       name: "Tell"
-      aliases: ["Say"]
+      aliases: ["talk", "말하기"]
       permission: "op"
     attack:
       name: "Attack"
-      aliases: ["punch"]
+      aliases: ["punch", "공격"]
       permission: "op"
