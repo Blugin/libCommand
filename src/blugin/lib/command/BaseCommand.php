@@ -128,7 +128,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
         return $this->overloads;
     }
 
-    public function addOverload(?Overload $overload = null) : Overload{
+    public function addOverload(?Overload $overload = null) : BaseCommand{
         if($overload === null){
             $overload = new Overload($this);
         }
@@ -139,10 +139,10 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
             $overload->setAliases($childData->getAliases());
             $this->recalculatePermission($overload->getPermission(), $childData->getPermission());
         }
-        return $overload;
+        return $this;
     }
 
-    public function addNamedOverload(string $name) : Overload{
+    public function addNamedOverload(string $name) : BaseCommand{
         return $this->addOverload(new NamedOverload($this, $name));
     }
 
