@@ -28,6 +28,7 @@ namespace blugin\lib\command\listener;
 use blugin\lib\command\enum\Enum;
 use blugin\lib\command\enum\EnumFactory;
 use pocketmine\event\level\LevelLoadEvent;
+use pocketmine\event\level\LevelUnloadEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -60,7 +61,7 @@ class EnumUpdateListener implements Listener{
     /**
      * @priority MONITOR
      */
-    public function onWorldUnload(LevelLoadEvent $event) : void{
+    public function onWorldUnload(LevelUnloadEvent $event) : void{
         $world = $event->getLevel();
         EnumFactory::getInstance()->get(Enum::WORLDS)->remove(strtolower($world->getFolderName()));
     }
