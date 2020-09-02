@@ -60,10 +60,10 @@ class Overload{
 
     /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
-        $this->getBaseCommand()->sendMessage($sender, $this->getFullMessage($str), $params);
+        $this->getBaseCommand()->sendMessage($sender, $this->getMessageId($str), $params);
     }
 
-    public function getFullMessage(string $str) : string{
+    public function getMessageId(string $str) : string{
         return "commands.{$this->baseCommand->getLabel()}." . "$str";
     }
 
