@@ -84,7 +84,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
                         break;
                     case Overload::ERROR_PARAMETER_INVALID:
                     case Overload::ERROR_PARAMETER_INSUFFICIENT:
-                        $this->sendMessage($sender, "commands.generic.usage", ["/{$this->getName()} " . $overload->toUsageString()]);
+                        $this->sendMessage($sender, "commands.generic.usage", ["/$commandLabel " . $overload->toUsageString()]);
                         return true;
                     case Overload::ERROR_PERMISSION_DENIED:
                         $this->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
@@ -94,12 +94,12 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
                 }
             }
         }
-        $this->sendMessage($sender, "commands.generic.usage", [$this->getUsage()]);
+        $this->sendMessage($sender, "commands.generic.usage", [$this->getUsage($commandLabel)]);
         return true;
     }
 
-    public function getUsage() : string{
-        $usage = "/{$this->getName()}";
+    public function getUsage(?string $commandLabel = null) : string{
+        $usage = "/" . $commandLabel ?? $this->getName() . "}";
 
         $count = count($this->overloads);
         if($count === 0)
