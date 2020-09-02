@@ -30,6 +30,7 @@ use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
 use blugin\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class Overload{
@@ -80,8 +81,12 @@ class Overload{
     }
 
     /** @return Parameter[] */
-    public function getParameters() : array{
-        return $this->parameters;
+    public function getParameters(Player $player) : array{
+        return array_map(function(Parameter $parameter) use ($player): Parameter{
+            $translatedParamater = clone $parameter;
+            $translatedParamater->setName($parameter->getTranslatedName($this, $player));
+            return $translatedParamater;
+        }, $this->parameters);
     }
 
     public function addParamater(Parameter $parameter) : Overload{
@@ -125,9 +130,9 @@ class Overload{
         return $this;
     }
 
-    public function toUsageString() : string{
-        return implode(" ", array_map(function(Parameter $parameter) : string{
-            return $parameter->toUsageString();
+    public function toUsageString(?CommandSender $sender = null) : string{
+        return implode(" ", array_map(function(Parameter $parameter) use ($sender): string{
+            return $parameter->toUsageString($this, $sender);
         }, $this->parameters));
     }
 
