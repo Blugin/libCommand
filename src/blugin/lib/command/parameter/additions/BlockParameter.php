@@ -51,7 +51,7 @@ class BlockParameter extends StringParameter{
             if(!is_numeric($v[0]) || isset($v[1]) && !is_numeric($v[1]))
                 return null;
 
-            return BlockFactory::getInstance()->get((int) $v[0], (int) ($v[1] ?? 0));
+            return BlockFactory::get((int) $v[0], (int) ($v[1] ?? 0));
         }catch(\InvalidArgumentException $e){
             return null;
         }
