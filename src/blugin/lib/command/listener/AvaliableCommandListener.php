@@ -32,9 +32,9 @@ use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\Server;
 
 class AvaliableCommandListener implements Listener{
+    use ListenerTrait;
+
     /**
-     * @param DataPacketSendEvent $event
-     *
      * @priority HIGHEST
      */
     public function onDataPacketSend(DataPacketSendEvent $event) : void{

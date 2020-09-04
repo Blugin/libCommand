@@ -23,21 +23,30 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib;
+namespace blugin\lib\command\listener;
 
-use blugin\lib\command\listener\AvaliableCommandListener;
-use blugin\lib\command\listener\EnumUpdateListener;
 use pocketmine\event\Listener;
-use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\Plugin;
 
-class libCommand extends PluginBase implements Listener{
-    public function onEnable() : void{
-        if(!AvaliableCommandListener::isRegistered()){
-            AvaliableCommandListener::register($this);
-        }
+/**
+ * This trait for {@link Listener} interface.
+ */
+trait ListenerTrait{
+    /** @var PLugin */
+    private static $registrant = null;
 
-        if(!EnumUpdateListener::isRegistered()){
-            EnumUpdateListener::register($this);
-        }
+    public static function isRegistered() : bool{
+        return self::$registrant instanceof Plugin;
     }
+
+    public static function register(Plugin $plugin) : void{
+        if(self::isRegistered()){
+            throw new \InvalidArgumentException("This event listener is already registered");
+        }
+
+        self::$registrant = $plugin;
+        $plugin->getServer()->getPluginManager()->registerEvents(new self(), $plugin);
+    }
+
+    private function __construct(){}
 }
