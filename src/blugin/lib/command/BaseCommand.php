@@ -29,7 +29,6 @@ use blugin\lib\command\config\CommandConfigData;
 use blugin\lib\command\overload\NamedOverload;
 use blugin\lib\command\overload\Overload;
 use blugin\lib\command\parameter\Parameter;
-use blugin\lib\command\translator\TranslatorHolder as innerTranslatorHolder;
 use blugin\lib\translator\TranslatorHolder;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -44,7 +43,7 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
 class BaseCommand extends Command implements PluginIdentifiableCommand{
-    /** @var PluginBase */
+    /** @var PluginBase&TranslatorHolder */
     private $owningPlugin;
 
     /** @var Overload[] */
@@ -55,7 +54,14 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
 
     /** @param string[] $aliases */
     public function __construct(string $label, PluginBase $owner, CommandConfigData $configData){
-        if(!($owner instanceof TranslatorHolder || $owner instanceof innerTranslatorHolder))
+        $check = false;
+        foreach(class_implements(get_class($owner)) as $className){
+            if(preg_match("/^blugin(.*)lib[\\\]translator[\\\]TranslatorHolder$/", $className)){
+                $check = true;
+                break;
+            }
+        }
+        if($check === false)
             throw new \InvalidArgumentException("BaseCommand's plugin must implement TranslatorHolder.");
 
         parent::__construct($configData->getName(), "", null, $configData->getAliases());
