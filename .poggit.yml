@@ -1,11 +1,16 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Blugin/libCommand
 build-by-default: true
 branches:
-- master
+  - master
 projects:
   libCommand:
     path: ""
     icon: "icon.png"
+    lint:
+      phpstan: false
+  libcommand:
+    model: virion
+    type: library
     lint:
       phpstan: false
 ...

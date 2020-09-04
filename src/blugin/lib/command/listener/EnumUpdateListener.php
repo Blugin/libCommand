@@ -34,6 +34,8 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
 class EnumUpdateListener implements Listener{
+    use ListenerTrait;
+
     /**
      * @priority MONITOR
      */
