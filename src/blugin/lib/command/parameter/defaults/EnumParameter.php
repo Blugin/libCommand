@@ -27,6 +27,7 @@ namespace blugin\lib\command\parameter\defaults;
 
 use blugin\lib\command\overload\Overload;
 use blugin\lib\command\parameter\Parameter;
+use blugin\utils\string\StringUtil as Str;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
@@ -61,7 +62,7 @@ abstract class EnumParameter extends Parameter{
         if($this->enum !== null){
             if($this->isExact()){
                 foreach($this->enum->getAll() as $name => $value){
-                    if(($this->isCaseSensitive() ? strcmp($argument, $name) : strcasecmp($argument, $name)) === 0){
+                    if(Str::equals($argument, $name, $this->isCaseSensitive())){
                         return $value;
                     }
                 }
@@ -72,7 +73,7 @@ abstract class EnumParameter extends Parameter{
             $length = strlen($argument);
             $minDiff = PHP_INT_MAX;
             foreach($this->enum->getAll() as $name => $value){
-                if(($this->isCaseSensitive() ? strpos($name, $argument) : stripos($name, $argument)) === 0){
+                if(Str::startsWith($argument, $name, $this->isCaseSensitive())){
                     $diff = strlen($name) - $length;
                     if($diff < $minDiff){
                         $found = $value;

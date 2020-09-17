@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\parameter\defaults;
 
 use blugin\lib\command\parameter\Parameter;
+use blugin\utils\stringutils\StringUtil as Str;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
@@ -69,7 +70,7 @@ class Vector3Parameter extends Parameter{
             "z" => $argument[2]
         ];
         foreach($coords as $coordName => &$coord){
-            if($sender instanceof Player && strpos($coord, "~") === 0){
+            if($sender instanceof Player && Str::startsWith($coord, "~")){
                 /** @var Player $sender */
                 $coord = $sender->getLocation()->{$coordName} + (float) substr($coord, 1);
             }else{

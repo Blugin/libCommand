@@ -25,54 +25,36 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\enum;
 
+use blugin\traits\singleton\SingletonTrait;
+use blugin\utils\arrays\ArrayUtil as Arr;
+use blugin\utils\string\StringUtil as Str;
+use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\Server;
 
 class EnumFactory{
-    /** @var EnumFactory|null */
-    protected static $instance = null;
-
-    public static function getInstance() : EnumFactory{
-        if(self::$instance === null){
-            self::$instance = new EnumFactory();
-        }
-        return self::$instance;
-    }
+    use SingletonTrait;
 
     /** @var Enum[] name => enum */
     protected $enums = [];
 
     private function __construct(){
+        $server = Server::getInstance();
         $this->set(Enum::BOOLEAN, ["true" => true, "false" => false]);
+        $this->set(Enum::PLAYERS, $players = Arr::keyMapAs($server->getOnlinePlayers(), function(Player $player) : string{ return strtolower($player->getName()); }));
 
-        $playersEnum = $this->set(Enum::PLAYERS);
-        $players = [];
-        foreach(Server::getInstance()->getOnlinePlayers() as $player){
-            $players[strtolower($player->getName())] = $player;
-        }
-        $playersEnum->setAll($players);
+        $this->set(Enum::PLAYERS_INCLUE_OFFLINE,
+            Arr::from($players)
+                ->map(function(Player $player){ return $player->getName(); })
+                ->mergeSoftAs(
+                    Arr::from(scandir($server->getDataPath() . "players/"))
+                        ->filter(function(string $fileName) : bool{ return Str::endsWith($fileName, ".dat"); })
+                        ->map([Str::class, "removeExtension"])
+                        ->combine()
+                )
+        );
 
-        $playersEnum = $this->set(Enum::PLAYERS_INCLUE_OFFLINE);
-        $players = array_map(function(Player $player) : string{
-            return $player->getName();
-        }, $players);
-        foreach(scandir(Server::getInstance()->getDataPath() . "players/") as $fileName){
-            if(substr($fileName, -4) === ".dat"){
-                $playerName = substr($fileName, 0, -4);
-                if(!isset($players[strtolower($playerName)])){
-                    $players[strtolower($playerName)] = $playerName;
-                }
-            }
-        }
-        $playersEnum->setAll($players);
-
-        $worldsEnum = $this->set(Enum::WORLDS);
-        $worlds = [];
-        foreach(Server::getInstance()->getLevels() as $world){
-            $worldName = strtolower($world->getFolderName());
-            $worlds[$worldName] = $world;
-        }
-        $worldsEnum->setAll($worlds);
+        $this->set(Enum::WORLDS, Arr::keyMapAs($server->getLevels(), function(Level $world) : string{ return strtolower($world->getFolderName()); }));
     }
 
     /** @return Enum[] */

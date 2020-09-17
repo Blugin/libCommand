@@ -29,6 +29,7 @@ use blugin\lib\command\BaseCommand;
 use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
 use blugin\lib\command\parameter\Parameter;
+use blugin\utils\arrays\ArrayUtil as Arr;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
@@ -82,11 +83,9 @@ class Overload{
 
     /** @return Parameter[] */
     public function getParameters(Player $player) : array{
-        return array_map(function(Parameter $parameter) use ($player): Parameter{
-            $translatedParamater = clone $parameter;
-            $translatedParamater->setName($parameter->getTranslatedName($this, $player));
-            return $translatedParamater;
-        }, $this->parameters);
+        return Arr::mapAs($this->parameters, function(Parameter $parameter) use ($player): Parameter{
+            return (clone $parameter)->setName($parameter->getTranslatedName($this, $player));
+        });
     }
 
     public function addParamater(Parameter $parameter) : Overload{
@@ -131,9 +130,9 @@ class Overload{
     }
 
     public function toUsageString(?CommandSender $sender = null) : string{
-        return implode(" ", array_map(function(Parameter $parameter) use ($sender): string{
+        return Arr::from($this->parameters)->map(function(Parameter $parameter) use ($sender): string{
             return $parameter->toUsageString($this, $sender);
-        }, $this->parameters));
+        })->join(" ");
     }
 
     /** @param string[] $args */
@@ -149,8 +148,7 @@ class Overload{
             if($offset > $argsCount)
                 break;
 
-            $argument = implode(" ", array_slice($args, $offset, $parameter->getLength()));
-            if($parameter->valid($sender, $argument))
+            if($parameter->valid($sender, Arr::slice($args, $offset, $parameter->getLength())->join(" ")))
                 return true;
 
             $offset += $parameter->getLength();
@@ -183,8 +181,7 @@ class Overload{
                 break;
             }
 
-            $argument = implode(" ", array_slice($args, $offset, $parameter->getLength()));
-            $result = $parameter->parse($sender, $argument);
+            $result = $parameter->parse($sender, Arr::slice($args, $offset, $parameter->getLength())->join(" "));
             if($result === null)
                 return self::ERROR_PARAMETER_INVALID;
 

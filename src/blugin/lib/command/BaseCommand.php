@@ -30,6 +30,7 @@ use blugin\lib\command\overload\NamedOverload;
 use blugin\lib\command\overload\Overload;
 use blugin\lib\command\parameter\Parameter;
 use blugin\lib\translator\TranslatorHolder;
+use blugin\utils\arrays\ArrayUtil as Arr;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
@@ -115,9 +116,9 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
         if($count === 1)
             return "$usage {$this->overloads[0]->toUsageString($sender)}";
 
-        return "$usage <" . implode(" | ", array_map(function(Overload $overload) use ($sender): string{
-                return $overload instanceof NamedOverload ? $overload->getTranslatedName($sender) : $overload->toUsageString($sender);
-            }, $this->overloads)) . ">";
+        return Arr::map($this->overloads, function(Overload $overload) use ($sender): string{
+            return $overload instanceof NamedOverload ? $overload->getTranslatedName($sender) : $overload->toUsageString($sender);
+        })->join(" | ", "$usage <", ">");
     }
 
     public function getMessage(?CommandSender $sender, string $str, array $params = []) : string{

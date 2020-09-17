@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\enum;
 
+use blugin\utils\arrays\ArrayUtil as Arr;
+use blugin\utils\string\StringUtil as Str;
 use pocketmine\network\mcpe\protocol\types\CommandEnum;
 use pocketmine\Server;
 
@@ -50,11 +52,11 @@ class Enum extends CommandEnum{
 
     /** @return string[] name[] */
     public function getValues() : array{
-        return array_map(function(string $value) : string{
-            if(strpos($value, " ") !== false)
+        return Arr::keys($this->values)->mapAs(function(string $value) : string{
+            if(Str::contains($value, " "))
                 $value = "\"$value\"";
             return $value;
-        }, array_keys($this->values));
+        });
     }
 
     /** @return mixed[] name => value */
