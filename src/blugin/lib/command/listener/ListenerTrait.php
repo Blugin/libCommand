@@ -32,19 +32,7 @@ use pocketmine\plugin\Plugin;
  * This trait for {@link Listener} interface.
  */
 trait ListenerTrait{
-    /** @var PLugin */
-    private static $registrant = null;
-
-    public static function isRegistered() : bool{
-        return self::$registrant instanceof Plugin;
-    }
-
     public static function register(Plugin $plugin) : void{
-        if(self::isRegistered()){
-            throw new \InvalidArgumentException("This event listener is already registered");
-        }
-
-        self::$registrant = $plugin;
         $plugin->getServer()->getPluginManager()->registerEvents(new self(), $plugin);
     }
 
