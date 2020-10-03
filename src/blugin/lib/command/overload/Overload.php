@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\overload;
 
 use blugin\lib\command\BaseCommand;
+use blugin\lib\command\constraints\Constraint;
 use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
 use blugin\lib\command\parameter\Parameter;
@@ -39,9 +40,13 @@ class Overload{
     public const ERROR_PARAMETER_INSUFFICIENT = -2;
     public const ERROR_PARAMETER_INVALID = -3;
     public const ERROR_PERMISSION_DENIED = -4;
+    public const ERROR_CONSTRAINT_VIOLATION = -5;
 
     /** @var BaseCommand */
     protected $baseCommand;
+
+    /** @var Constraint[] */
+    protected $constraints = [];
 
     /** @var Parameter[] */
     protected $parameters = [];
@@ -79,6 +84,16 @@ class Overload{
 
         $this->baseCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
         return false;
+    }
+
+    /** @return Constraint[] */
+    public function getConstraints() : array{
+        return $this->constraints;
+    }
+
+    public function addConstraint(Constraint $constraint) : Overload{
+        $this->constraints[] = $constraint;
+        return $this;
     }
 
     /** @return Parameter[] */
@@ -162,6 +177,14 @@ class Overload{
      * @return mixed[]|int name => value. if parse failed return int
      */
     public function parse(CommandSender $sender, array $args){
+        $baseComand = $this->getBaseCommand();
+        foreach($this->constraints as $constraint){
+            if(!$constraint->test($sender, $baseComand, $args)){
+                $constraint->onFailure($sender, $baseComand, $args);
+                return self::ERROR_CONSTRAINT_VIOLATION;
+            }
+        }
+
         if(!$this->testPermission($sender))
             return self::ERROR_PERMISSION_DENIED;
 
