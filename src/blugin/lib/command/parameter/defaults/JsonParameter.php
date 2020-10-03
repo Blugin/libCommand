@@ -38,7 +38,7 @@ class JsonParameter extends TextParameter{
     }
 
     public function valid(CommandSender $sender, string $argument) : bool{
-        return preg_match("/^{([.]*)}$/", $argument);
+        return preg_match("/^{(.*)}$/", $argument);
     }
 
     /** @return mixed[]|null the parsed json array */
