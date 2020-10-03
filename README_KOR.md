@@ -1,15 +1,15 @@
-<p align="center"> <img src="https://ghcdn.rawgit.org/Blugin/libCommand/master/icon.png" width="360"> </p>  
+<p align="center"> <img src="https://ghcdn.rawgit.org/Blugin/libCommand/main/icon.png" width="360"> </p>  
   
 # libCommand  
 ### Command library with multiple functions
 <p align="right">  
-  <a href="https://github.com/Blugin/libCommand/blob/master/README_KOR.md">  
+  <a href="https://github.com/Blugin/libCommand/blob/main/README_KOR.md">  
     <img src="https://img.shields.io/static/v1?label=%ED%95%9C%EA%B5%AD%EC%96%B4&message=%EB%A1%9C+%EC%9D%BD%EA%B8%B0&labelColor=success">  
   </a>  
 </p>  
     
 [![poggit-build](https://poggit.pmmp.io/ci.shield/Blugin/libCommand/libCommand)](https://poggit.pmmp.io/ci/Blugin/libCommand/libCommand)
-[![license](https://img.shields.io/github/license/Blugin/libCommand.svg)](https://github.com/Blugin/libCommand/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/Blugin/libCommand.svg)](https://github.com/Blugin/libCommand/blob/main/LICENSE)
 [![hits](https://views.whatilearened.today/views/github/Blugin/libCommand.svg)](http://hits.dwyl.com/Blugin/libCommand)
   
 ✔️ 모든 매개 변수를 단순히 객체화 한 API  
@@ -34,6 +34,6 @@
 <br>  
   
 ## :memo: 라이센스 
-> 라이센스 전문은 [여기](https://github.com/Blugin/libCommand/blob/master/LICENSE) 에서 확인할 수 있습니다  
+> 라이센스 전문은 [여기](https://github.com/Blugin/libCommand/blob/main/LICENSE) 에서 확인할 수 있습니다  
   
 이 프로젝트는 **MIT LICENSE** 라이센스 조건에 따라 라이센스가 부여됩니다
