@@ -74,7 +74,7 @@ class Overload{
     }
 
     public function testPermission(CommandSender $sender) : bool{
-        if($this->getPermission() == "" | $sender->hasPermission($this->getPermission()))
+        if($this->getPermission() == "" || $sender->hasPermission($this->getPermission()))
             return true;
 
         $this->baseCommand->sendMessage($sender, TextFormat::RED . "%commands.generic.permission");
