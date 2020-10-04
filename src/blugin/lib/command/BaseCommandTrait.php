@@ -35,14 +35,14 @@ trait BaseCommandTrait{
     use CommandConfigTrait;
 
     /** @var BaseCommand */
-    private $baseCommand;
+    private $baseCommand = [];
 
     public function getBaseCommand(?string $label = null) : BaseCommand{
-        if($this->baseCommand === null){
-            $this->baseCommand = $this->createCommand($label);
+        if(!isset($this->baseCommand[$label = trim(strtolower($label ?? $this->getName()))])){
+            $this->baseCommand[$label] = $this->createCommand($label);
         }
 
-        return $this->baseCommand;
+        return $this->baseCommand[$label];
     }
 
     public function createCommand(?string $label = null) : BaseCommand{
