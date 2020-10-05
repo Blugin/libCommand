@@ -29,6 +29,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+use pocketmine\Player;
 
 class ItemParameter extends StringParameter{
     public function getType() : int{
@@ -45,6 +46,8 @@ class ItemParameter extends StringParameter{
 
     /** @return Item|null */
     public function parseSilent(CommandSender $sender, string $argument){
+        if($sender instanceof Player && $argument === "~")
+            return $sender->getInventory()->getItemInHand();
         try{
             return ItemFactory::fromStringSingle($argument);
         }catch(\InvalidArgumentException $e){
