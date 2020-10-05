@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace blugin\lib\command\constraints;
+namespace blugin\lib\command\constraint;
 
 use blugin\lib\command\BaseCommand;
 use pocketmine\command\CommandSender;
