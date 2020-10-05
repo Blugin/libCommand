@@ -32,7 +32,7 @@ use pocketmine\command\ConsoleCommandSender;
 class ConsoleConstraint implements Constraint{
     /** @param string[] $args */
     public function test(CommandSender $sender, BaseCommand $command, array $args) : bool{
-        return !$sender instanceof ConsoleCommandSender;
+        return $sender instanceof ConsoleCommandSender;
     }
 
     /** @param string[] $args */

@@ -32,7 +32,7 @@ use pocketmine\Player;
 class InGameConstraint implements Constraint{
     /** @param string[] $args */
     public function test(CommandSender $sender, BaseCommand $command, array $args) : bool{
-        return !$sender instanceof Player;
+        return $sender instanceof Player;
     }
 
     /** @param string[] $args */
