@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command;
 
 use blugin\lib\command\config\CommandConfigData;
+use blugin\lib\command\constraint\Constraint;
 use blugin\lib\command\overload\NamedOverload;
 use blugin\lib\command\overload\Overload;
 use blugin\lib\command\parameter\Parameter;
@@ -46,6 +47,9 @@ use pocketmine\utils\TextFormat;
 class BaseCommand extends Command implements PluginIdentifiableCommand{
     /** @var PluginBase&TranslatorHolder */
     private $owningPlugin;
+
+    /** @var Constraint[] */
+    protected $constraints = [];
 
     /** @var Overload[] */
     protected $overloads = [];
@@ -80,6 +84,13 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
     public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
         if(!$this->owningPlugin->isEnabled() || !$this->testPermission($sender))
             return false;
+
+        foreach($this->constraints as $constraint){
+            if(!$constraint->test($sender, $this, $args)){
+                $constraint->onFailure($sender, $this, $args);
+                return true;
+            }
+        }
 
         if(empty($this->overloads))
             return false;
@@ -129,6 +140,16 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
     /** @param string[] $params */
     public function sendMessage(CommandSender $sender, string $str, array $params = []) : void{
         $sender->sendMessage(new TranslationContainer($this->getMessage($sender, $str, $params), $params));
+    }
+
+    /** @return Constraint[] */
+    public function getConstraints() : array{
+        return $this->constraints;
+    }
+
+    public function addConstraint(Constraint $constraint) : BaseCommand{
+        $this->constraints[] = $constraint;
+        return $this;
     }
 
     /** @return Overload[] */
