@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\parameter\defaults;
 
 use blugin\lib\command\parameter\Parameter;
-use blugin\utils\stringutils\StringUtil as Str;
+use blugin\utils\string\StringUtil as Str;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
