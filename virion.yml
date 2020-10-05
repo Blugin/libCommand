@@ -1,7 +1,7 @@
 ---
 name: libcommand
 antigen: blugin\lib\command
-version: 1.4.1
+version: 1.5.0
 api: 3.0.0
 authors: ['Blugin-team', 'PresentKim']
 description: "Command library with multiple functions"
