@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\overload;
 
 use blugin\lib\command\BaseCommand;
-use blugin\lib\command\constraints\Constraint;
+use blugin\lib\command\constraint\Constraint;
 use blugin\lib\command\handler\ClosureCommandHandler;
 use blugin\lib\command\handler\ICommandHandler;
 use blugin\lib\command\parameter\Parameter;
