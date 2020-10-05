@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace kim\present\lib\command\parameter\defaults;
 
 use kim\present\lib\command\parameter\Parameter;
-use kim\present\utils\stringutils\StringUtil as Str;
+use kim\present\lib\stringutils\StringUtils as Str;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
