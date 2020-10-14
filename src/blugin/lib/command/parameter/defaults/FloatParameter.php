@@ -30,11 +30,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
 class FloatParameter extends Parameter{
-    /** @var float|null */
-    protected $min = null;
+    protected ?float $min = null;
 
-    /** @var float|null */
-    protected $max = null;
+    protected ?float $max = null;
 
     public function getType() : int{
         return AvailableCommandsPacket::ARG_TYPE_FLOAT;

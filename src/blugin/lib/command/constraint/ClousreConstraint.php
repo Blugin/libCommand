@@ -30,11 +30,9 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\Utils;
 
 class ClousreConstraint implements Constraint{
-    /** @var \Closure */
-    protected $testFunc;
+    protected \Closure $testFunc;
 
-    /** @var \Closure */
-    protected $onFailureFunc;
+    protected \Closure $onFailureFunc;
 
     /**
      * ClousreConstraint constructor.

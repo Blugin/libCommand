@@ -36,14 +36,10 @@ use pocketmine\network\mcpe\protocol\types\CommandParameter;
 abstract class Parameter extends CommandParameter{
     use LabelHolderTrait;
 
-    /** @var Overload|null */
-    protected $overload = null;
+    protected ?Overload $overload = null;
 
     /** @var int length of parameter */
-    protected $length = 1;
-
-    /** @var Enum|null */
-    public $enum;
+    protected int $length = 1;
 
     /** @var mixed */
     protected $default = null;

@@ -31,13 +31,13 @@ use blugin\lib\command\parameter\Parameter;
 use blugin\lib\command\traits\LabelHolderTrait;
 use blugin\lib\command\traits\NameHolderTrait;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class NamedOverload extends Overload{
     use LabelHolderTrait, NameHolderTrait;
 
     /** @var string[] */
-    private $aliases = [];
+    private array $aliases = [];
 
     public function __construct(BaseCommand $baseCommand, string $name){
         $this->baseCommand = $baseCommand;

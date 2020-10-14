@@ -36,25 +36,25 @@ class EnumFactory{
     use SingletonTrait;
 
     /** @var Enum[] name => enum */
-    protected $enums = [];
+    protected array $enums = [];
 
     private function __construct(){
         $server = Server::getInstance();
         $this->set(Enum::BOOLEAN, ["true" => true, "false" => false]);
-        $this->set(Enum::PLAYERS, $players = Arr::keyMapAs($server->getOnlinePlayers(), function(Player $player) : string{ return strtolower($player->getName()); }));
+        $this->set(Enum::PLAYERS, $players = Arr::keyMapAs($server->getOnlinePlayers(), fn(Player $player) => strtolower($player->getName())));
 
         $this->set(Enum::PLAYERS_INCLUE_OFFLINE,
             Arr::from($players)
-                ->map(function(Player $player){ return $player->getName(); })
+                ->map(fn(Player $player) => $player->getName())
                 ->mergeSoftAs(
                     Arr::from(scandir($server->getDataPath() . "players/"))
-                        ->filter(function(string $fileName) : bool{ return Str::endsWith($fileName, ".dat"); })
-                        ->map([Str::class, "removeExtension"])
+                        ->filter(fn(string $fileName) => Str::endsWith($fileName, ".dat"))
+                        ->map(fn(string $fileName) => Str::removeExtension($fileName))
                         ->combine()
                 )
         );
 
-        $this->set(Enum::WORLDS, Arr::keyMapAs($server->getLevels(), function(Level $world) : string{ return strtolower($world->getFolderName()); }));
+        $this->set(Enum::WORLDS, Arr::keyMapAs($server->getLevels(), fn(Level $world) => strtolower($world->getFolderName())));
     }
 
     /** @return Enum[] */

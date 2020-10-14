@@ -42,20 +42,17 @@ class Overload{
     public const ERROR_PERMISSION_DENIED = -4;
     public const ERROR_CONSTRAINT_VIOLATION = -5;
 
-    /** @var BaseCommand */
-    protected $baseCommand;
+    protected BaseCommand $baseCommand;
 
     /** @var Constraint[] */
-    protected $constraints = [];
+    protected array $constraints = [];
 
     /** @var Parameter[] */
-    protected $parameters = [];
+    protected array $parameters = [];
 
-    /** @var int */
-    protected $requireLength = 0;
+    protected int $requireLength = 0;
 
-    /** @var ICommandHandler|null */
-    protected $handler = null;
+    protected ?ICommandHandler $handler = null;
 
     public function __construct(BaseCommand $baseCommand){
         $this->baseCommand = $baseCommand;
@@ -145,9 +142,9 @@ class Overload{
     }
 
     public function toUsageString(?CommandSender $sender = null) : string{
-        return Arr::from($this->parameters)->map(function(Parameter $parameter) use ($sender): string{
-            return $parameter->toUsageString($this, $sender);
-        })->join(" ");
+        return Arr::from($this->parameters)
+            ->map(fn(Parameter $parameter) => $parameter->toUsageString($this, $sender))
+            ->join(" ");
     }
 
     /** @param string[] $args */

@@ -46,16 +46,15 @@ use pocketmine\utils\TextFormat;
 
 class BaseCommand extends Command implements PluginIdentifiableCommand{
     /** @var PluginBase&TranslatorHolder */
-    private $owningPlugin;
+    private PluginBase $owningPlugin;
 
     /** @var Constraint[] */
-    protected $constraints = [];
+    protected array $constraints = [];
 
     /** @var Overload[] */
-    protected $overloads = [];
+    protected array $overloads = [];
 
-    /** @var CommandConfigData */
-    protected $configData;
+    protected CommandConfigData $configData;
 
     /** @param string[] $aliases */
     public function __construct(string $label, PluginBase $owner, CommandConfigData $configData){
@@ -175,9 +174,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
         return $this->addOverload(new NamedOverload($this, $name));
     }
 
-    /**
-     * @return Parameter[][]
-     */
+    /** @return Parameter[][] */
     public function asOverloadsArray(Player $player) : array{
         $overloads = [];
         foreach($this->overloads as $overload){

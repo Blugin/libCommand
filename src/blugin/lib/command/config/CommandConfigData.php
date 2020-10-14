@@ -28,20 +28,17 @@ namespace blugin\lib\command\config;
 use pocketmine\permission\Permission;
 
 class CommandConfigData{
-    /** @var string */
-    protected $label;
+    protected string $label;
 
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    /** @var string */
-    protected $permission = "op";
+    protected string $permission = "op";
 
     /** @var string[] */
-    protected $aliases = [];
+    protected array $aliases = [];
 
     /** @var CommandConfigData[] */
-    protected $childrens = [];
+    protected array $childrens = [];
 
     public function __construct(string $label, array $configData){
         $this->label = $label;

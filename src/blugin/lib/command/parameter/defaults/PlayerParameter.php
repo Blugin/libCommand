@@ -32,8 +32,8 @@ use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
 class PlayerParameter extends EnumParameter{
-    /** @var bool Whether to include offline players */
-    protected $includeOffline = false;
+    /** Whether to include offline players */
+    protected bool $includeOffline = false;
 
     public function getType() : int{
         return AvailableCommandsPacket::ARG_TYPE_TARGET;

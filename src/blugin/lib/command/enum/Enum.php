@@ -37,7 +37,7 @@ class Enum extends CommandEnum{
     public const WORLDS = "worlds";
 
     /** @var mixed[] name => value */
-    protected $values;
+    protected array $values;
 
     /** @param mixed[]|null $values name => value */
     public function __construct(string $name, ?array $values = null){
@@ -52,11 +52,8 @@ class Enum extends CommandEnum{
 
     /** @return string[] name[] */
     public function getValues() : array{
-        return Arr::keys($this->values)->mapAs(function(string $value) : string{
-            if(Str::contains($value, " "))
-                $value = "\"$value\"";
-            return $value;
-        });
+        return Arr::keys($this->values)
+            ->mapAs(fn(string $value) => Str::contains($value, " ") ? "\"$value\"" : $value);
     }
 
     /** @return mixed[] name => value */

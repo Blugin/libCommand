@@ -30,8 +30,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\utils\Utils;
 
 class ClosureCommandHandler implements ICommandHandler{
-    /** @var \Closure */
-    protected $closure;
+    protected \Closure $closure;
 
     public function __construct(\Closure $closure){
         Utils::validateCallableSignature(function(CommandSender $sender, array $args, Overload $overload) : bool{

@@ -26,8 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\traits;
 
 trait LabelHolderTrait{
-    /** @var string */
-    protected $label;
+    protected string $label;
 
     public function getLabel() : string{
         return $this->label;

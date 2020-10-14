@@ -26,8 +26,7 @@ declare(strict_types=1);
 namespace blugin\lib\command\traits;
 
 trait NameHolderTrait{
-    /** @var string */
-    protected $name;
+    protected string $name;
 
     public function getName() : string{
         return $this->name;

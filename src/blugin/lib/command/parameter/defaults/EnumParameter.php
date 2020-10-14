@@ -32,11 +32,11 @@ use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
 abstract class EnumParameter extends Parameter{
-    /** @var bool Whether it should be written in exactly full name */
-    protected $exact = true;
+    /** Whether it should be written in exactly full name */
+    protected bool $exact = true;
 
-    /** @var bool Whether to check case */
-    protected $caseSensitive = false;
+    /** Whether to check case */
+    protected bool $caseSensitive = false;
 
     public function getType() : int{
         return AvailableCommandsPacket::ARG_TYPE_STRING;

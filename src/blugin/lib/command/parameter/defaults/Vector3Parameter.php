@@ -33,8 +33,8 @@ use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 use pocketmine\Player;
 
 class Vector3Parameter extends Parameter{
-    /** @var bool Whether to rounding down the coordinates */
-    protected $isFloor = false;
+    /** Whether to rounding down the coordinates */
+    protected bool $isFloor = false;
 
     public function getType() : int{
         return AvailableCommandsPacket::ARG_TYPE_POSITION;

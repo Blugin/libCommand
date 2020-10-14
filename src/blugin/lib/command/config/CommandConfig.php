@@ -29,11 +29,10 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
 class CommandConfig extends Config{
-    /** @var PluginBase */
-    protected $owningPlugin;
+    protected PluginBase $owningPlugin;
 
     /** @var CommandConfigData[] name => command config data */
-    protected $dataMap;
+    protected array $dataMap;
 
     public function __construct(PluginBase $owningPlugin){
         parent::__construct("{$owningPlugin->getDataFolder()}command.yml", self::YAML);

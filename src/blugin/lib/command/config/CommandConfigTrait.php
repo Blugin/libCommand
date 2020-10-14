@@ -31,8 +31,7 @@ use pocketmine\plugin\PluginBase;
  * This trait override most methods in the {@link PluginBase} abstract class.
  */
 trait CommandConfigTrait{
-    /** @var CommandConfig */
-    private $commandConfig = null;
+    private ?CommandConfig $commandConfig = null;
 
     public function getCommandConfig() : CommandConfig{
         if($this->commandConfig === null){
