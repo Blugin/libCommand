@@ -27,7 +27,7 @@ namespace blugin\lib\command\constraint;
 
 use blugin\lib\command\BaseCommand;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class InGameConstraint implements Constraint{
     /** @param string[] $args */

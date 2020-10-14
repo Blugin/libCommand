@@ -28,9 +28,9 @@ namespace blugin\lib\command\parameter\additions;
 use blugin\lib\command\parameter\defaults\StringParameter;
 use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
+use pocketmine\item\LegacyStringToItemParser;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class ItemParameter extends StringParameter{
     public function getType() : int{
@@ -50,7 +50,7 @@ class ItemParameter extends StringParameter{
         if($sender instanceof Player && $argument === "~")
             return $sender->getInventory()->getItemInHand();
         try{
-            return ItemFactory::fromStringSingle($argument);
+            return LegacyStringToItemParser::getInstance()->parse($argument);
         }catch(\InvalidArgumentException $e){
             return null;
         }

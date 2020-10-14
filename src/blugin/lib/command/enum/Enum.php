@@ -27,7 +27,7 @@ namespace blugin\lib\command\enum;
 
 use blugin\utils\arrays\ArrayUtil as Arr;
 use blugin\utils\string\StringUtil as Str;
-use pocketmine\network\mcpe\protocol\types\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\command\CommandEnum;
 use pocketmine\Server;
 
 class Enum extends CommandEnum{
@@ -36,18 +36,19 @@ class Enum extends CommandEnum{
     public const PLAYERS_INCLUE_OFFLINE = "allplayer";
     public const WORLDS = "worlds";
 
+    protected string $name;
+
     /** @var mixed[] name => value */
     protected array $values;
 
     /** @param mixed[]|null $values name => value */
     public function __construct(string $name, ?array $values = null){
-        $this->enumName = $name;
+        $this->name = $name;
         $this->values = $values ?? [];
-        $this->enumValues = $this->getValues();
     }
 
     public function getName() : string{
-        return $this->enumName;
+        return $this->name;
     }
 
     /** @return string[] name[] */
@@ -100,9 +101,8 @@ class Enum extends CommandEnum{
         /*
          * TODO: Figure out how to use softEnums
         */
-        $this->enumValues = $this->getValues();
         foreach(Server::getInstance()->getOnlinePlayers() as $player){
-            $player->sendCommandData();
+            $player->getNetworkSession()->syncAvailableCommands();
         }
     }
 }

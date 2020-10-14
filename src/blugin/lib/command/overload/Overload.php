@@ -32,7 +32,7 @@ use blugin\lib\command\handler\ICommandHandler;
 use blugin\lib\command\parameter\Parameter;
 use blugin\utils\arrays\ArrayUtil as Arr;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 class Overload{

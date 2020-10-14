@@ -27,10 +27,10 @@ namespace blugin\lib\command\enum;
 
 use blugin\utils\arrays\ArrayUtil as Arr;
 use blugin\utils\string\StringUtil as Str;
-use pocketmine\level\Level;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\SingletonTrait;
+use pocketmine\world\World;
 
 class EnumFactory{
     use SingletonTrait;

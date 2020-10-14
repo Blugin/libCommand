@@ -34,17 +34,17 @@ use blugin\lib\translator\TranslatorHolder;
 use blugin\utils\arrays\ArrayUtil as Arr;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\lang\TranslationContainer;
 use pocketmine\permission\Permission;
 use pocketmine\permission\PermissionManager;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\PluginOwned;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-class BaseCommand extends Command implements PluginIdentifiableCommand{
+class BaseCommand extends Command implements PluginOwned{
     /** @var PluginBase&TranslatorHolder */
     private PluginBase $owningPlugin;
 
@@ -198,7 +198,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
     }
 
     /** @return PluginBase */
-    public function getPlugin() : Plugin{
+    public function getOwningPlugin() : Plugin{
         return $this->owningPlugin;
     }
 }

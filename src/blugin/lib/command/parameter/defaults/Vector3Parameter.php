@@ -30,7 +30,7 @@ use blugin\utils\string\StringUtil as Str;
 use pocketmine\command\CommandSender;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class Vector3Parameter extends Parameter{
     /** Whether to rounding down the coordinates */
