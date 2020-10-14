@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace blugin\lib\command\enum;
 
-use blugin\traits\singleton\SingletonTrait;
 use blugin\utils\arrays\ArrayUtil as Arr;
 use blugin\utils\string\StringUtil as Str;
 use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\SingletonTrait;
 
 class EnumFactory{
     use SingletonTrait;
