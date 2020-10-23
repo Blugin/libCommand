@@ -1,4 +1,4 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Blugin/libCommand
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/PresentKim/libcommand
 branches:
   - main
 projects:
@@ -8,10 +8,10 @@ projects:
     lint:
       phpstan: false
     libs:
-      - src: Blugin/stringutils/stringutils
+      - src: PresentKim/stringutils/stringutils
         version: ^1.1.1
-      - src: Blugin/arrayutils/arrayutils
+      - src: PresentKim/arrayutils/arrayutils
         version: ^2.0.0
-      - src: Blugin/SingletonTrait/SingletonTrait
+      - src: PresentKim/singleton-trait/singleton-trait
         version: ^1.0.0
 ...
