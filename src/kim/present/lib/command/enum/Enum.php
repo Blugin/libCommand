@@ -51,11 +51,10 @@ class Enum extends CommandEnum{
 
     /** @return string[] name[] */
     public function getValues() : array{
-        return Arr::keys($this->values)->mapAs(function(string $value) : string{
-            if(Str::contains($value, " "))
-                $value = "\"$value\"";
-            return $value;
-        });
+        return Arr::keysFrom($this->values)
+            ->mapAs(function(string $value) : string{
+                return Str::contains($value, " ") ? "\"$value\"" : $value;
+            });
     }
 
     /** @return mixed[] name => value */

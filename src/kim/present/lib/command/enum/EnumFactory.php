@@ -40,21 +40,30 @@ class EnumFactory{
     private function __construct(){
         $server = Server::getInstance();
         $this->set(Enum::BOOLEAN, ["true" => true, "false" => false]);
-        $this->set(Enum::PLAYERS, $players = Arr::keyMapAs($server->getOnlinePlayers(), function(Player $player) : string{ return strtolower($player->getName()); }));
+        $this->set(Enum::PLAYERS, $players =
+            Arr::mapKeyFromAs($server->getOnlinePlayers(), function(Player $player) : string{
+                return strtolower($player->getName());
+            })
+        );
 
         /** @var Player[] $players */
         $this->set(Enum::PLAYERS_INCLUE_OFFLINE,
-            Arr::from($players)
-                ->map(function(Player $player){ return $player->getName(); })
-                ->mergeSoftAs(
-                    Arr::from(scandir($server->getDataPath() . "players/"))
-                        ->filter(function(string $fileName) : bool{ return Str::endsWith($fileName, ".dat"); })
-                        ->map([Str::class, "removeExtension"])
-                        ->combine()
-                )
+            Arr::from(scandir($server->getDataPath() . "players/"))
+                ->filter(function(string $fileName) : bool{ return Str::endsWith($fileName, ".dat"); })
+                ->mapAssocAs(function(string $fileName) use ($players): array{
+                    $playerName = Str::removeExtension($fileName);
+                    if(isset($players[$playerName])){
+                        $playerName = $players[$playerName]->getName();
+                    }
+                    return [strtolower($playerName), $playerName];
+                })
         );
 
-        $this->set(Enum::WORLDS, Arr::keyMapAs($server->getLevels(), function(Level $world) : string{ return strtolower($world->getFolderName()); }));
+        $this->set(Enum::WORLDS,
+            Arr::mapKeyFromAs($server->getLevels(), function(Level $world) : string{
+                return strtolower($world->getFolderName());
+            })
+        );
     }
 
     /** @return Enum[] */

@@ -97,7 +97,7 @@ class Overload{
 
     /** @return Parameter[] */
     public function getParameters(Player $player) : array{
-        return Arr::mapAs($this->parameters, function(Parameter $parameter) use ($player): Parameter{
+        return Arr::mapFromAs($this->parameters, function(Parameter $parameter) use ($player): Parameter{
             return (clone $parameter)->setName($parameter->getTranslatedName($this, $player));
         });
     }
