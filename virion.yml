@@ -1,6 +1,6 @@
 ---
 name: libcommand
-antigen: blugin\lib\command
+antigen: kim\present\lib\command
 version: 1.5.0
 api: 3.0.0
 authors: [PresentKim, Blugin-team]
