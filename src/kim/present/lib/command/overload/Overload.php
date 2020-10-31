@@ -207,8 +207,11 @@ class Overload{
             if($result === null)
                 return self::ERROR_PARAMETER_INVALID;
 
-            $offset += $parameter->getLength();
+            if(!isset($results[$offset])){
+                $results[$offset] = $result;
+            }
             $results[$parameter->getLabel()] = $result;
+            $offset += $parameter->getLength();
         }
         return $results;
     }
