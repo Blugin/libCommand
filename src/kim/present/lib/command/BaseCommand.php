@@ -119,7 +119,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
         if($count === 1)
             return "$usage {$this->overloads[0]->toUsageString($sender)}";
 
-        return Arr::map($this->overloads, function(Overload $overload) use ($sender): string{
+        return Arr::mapFrom($this->overloads, function(Overload $overload) use ($sender): string{
             return $overload instanceof NamedOverload ? $overload->getTranslatedName($sender) : $overload->toUsageString($sender);
         })->join(" | ", "$usage <", ">");
     }

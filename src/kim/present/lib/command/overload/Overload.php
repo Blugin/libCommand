@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace kim\present\lib\command\overload;
 
+use kim\present\lib\arrayutils\ArrayUtils as Arr;
 use kim\present\lib\command\BaseCommand;
 use kim\present\lib\command\constraint\Constraint;
 use kim\present\lib\command\handler\ClosureCommandHandler;
 use kim\present\lib\command\handler\ICommandHandler;
 use kim\present\lib\command\parameter\Parameter;
-use kim\present\lib\arrayutils\ArrayUtils as Arr;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
@@ -162,7 +162,7 @@ class Overload{
             if($offset > $argsCount)
                 break;
 
-            if($parameter->valid($sender, Arr::slice($args, $offset, $parameter->getLength())->join(" ")))
+            if($parameter->valid($sender, Arr::sliceFrom($args, $offset, $offset + $parameter->getLength())->join(" ")))
                 return true;
 
             $offset += $parameter->getLength();
@@ -203,7 +203,7 @@ class Overload{
                 break;
             }
 
-            $result = $parameter->parse($sender, Arr::slice($args, $offset, $parameter->getLength())->join(" "));
+            $result = $parameter->parse($sender, Arr::sliceFrom($args, $offset, $offset + $parameter->getLength())->join(" "));
             if($result === null)
                 return self::ERROR_PARAMETER_INVALID;
 
