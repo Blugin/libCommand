@@ -58,14 +58,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
 
     /** @param string[] $aliases */
     public function __construct(string $label, PluginBase $owner, CommandConfigData $configData){
-        $check = false;
-        foreach(class_implements(get_class($owner)) as $className){
-            if(preg_match("/^blugin(.*)lib[\\\]translator[\\\]TranslatorHolder$/", $className)){
-                $check = true;
-                break;
-            }
-        }
-        if($check === false)
+        if(!$owner instanceof TranslatorHolder)
             throw new \InvalidArgumentException("BaseCommand's plugin must implement TranslatorHolder.");
 
         parent::__construct($configData->getName(), "", null, $configData->getAliases());
@@ -126,7 +119,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
         if($count === 1)
             return "$usage {$this->overloads[0]->toUsageString($sender)}";
 
-        return Arr::map($this->overloads, function(Overload $overload) use ($sender): string{
+        return Arr::mapFrom($this->overloads, function(Overload $overload) use ($sender): string{
             return $overload instanceof NamedOverload ? $overload->getTranslatedName($sender) : $overload->toUsageString($sender);
         })->join(" | ", "$usage <", ">");
     }

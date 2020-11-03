@@ -52,8 +52,8 @@ class Enum extends CommandEnum{
     /** @return string[] name[] */
     public function getValues() : array{
         return Arr::keysFrom($this->values)
-            ->mapAs(function(string $value) : string{
-                return Str::contains($value, " ") ? "\"$value\"" : $value;
+            ->mapAs(function($value){
+                return is_string($value) && Str::contains((string) $value, " ") ? "\"$value\"" : $value;
             });
     }
 
