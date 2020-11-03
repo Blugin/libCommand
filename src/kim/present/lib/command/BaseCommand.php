@@ -58,14 +58,7 @@ class BaseCommand extends Command implements PluginIdentifiableCommand{
 
     /** @param string[] $aliases */
     public function __construct(string $label, PluginBase $owner, CommandConfigData $configData){
-        $check = false;
-        foreach(class_implements(get_class($owner)) as $className){
-            if(preg_match("/^blugin(.*)lib[\\\]translator[\\\]TranslatorHolder$/", $className)){
-                $check = true;
-                break;
-            }
-        }
-        if($check === false)
+        if(!$owner instanceof TranslatorHolder)
             throw new \InvalidArgumentException("BaseCommand's plugin must implement TranslatorHolder.");
 
         parent::__construct($configData->getName(), "", null, $configData->getAliases());
