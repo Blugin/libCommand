@@ -25,16 +25,18 @@ declare(strict_types=1);
 namespace kim\present\lib\command\parameter\additions;
 
 use kim\present\lib\command\enum\EnumFactory;
+use kim\present\lib\command\overload\Overload;
 use kim\present\lib\command\parameter\defaults\EnumParameter;
 use kim\present\lib\command\parameter\Parameter;
+use pocketmine\command\CommandSender;
 
 class ConstParameter extends EnumParameter{
     public function getTypeName() : string{
         return $this->getName();
     }
 
-    public function prepare() : Parameter{
+    public function prepare(Overload $overload, ?CommandSender $sender = null) : Parameter{
         $this->enum = EnumFactory::getInstance()->set("const-{$this->getName()}", [$this->getName() => $this->getName()]);
-        return $this;
+        return parent::prepare($overload, $sender);
     }
 }
