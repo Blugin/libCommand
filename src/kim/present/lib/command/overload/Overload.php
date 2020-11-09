@@ -68,6 +68,10 @@ class Overload{
         $this->getBaseCommand()->sendMessage($sender, $this->getMessageId($str), $params);
     }
 
+    public function getMessage(CommandSender $sender, string $str, array $params = []) : string{
+        return $this->getBaseCommand()->getMessage($sender, $this->getMessageId($str), $params);
+    }
+
     public function getMessageId(string $str) : string{
         return "commands.{$this->baseCommand->getLabel()}." . "$str";
     }
