@@ -54,7 +54,6 @@ abstract class Parameter extends CommandParameter{
         $this->isOptional = $optional;
         $this->enum = $enum;
         $this->setLabel($name);
-        $this->prepare();
         $this->paramType = $this->getParamType();
         $this->flags = $this->getFlags();
     }
@@ -154,8 +153,8 @@ abstract class Parameter extends CommandParameter{
         return $messageId === $name ? $this->getName() : $name;
     }
 
-    public function prepare() : Parameter{
-        return $this;
+    public function prepare(Overload $overload, ?CommandSender $sender = null) : Parameter{
+        return $this->setName($this->getTranslatedName($overload, $sender));
     }
 
     public function valid(CommandSender $sender, string $argument) : bool{

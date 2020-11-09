@@ -26,6 +26,7 @@ namespace kim\present\lib\command\parameter\additions;
 
 use kim\present\lib\command\enum\Enum;
 use kim\present\lib\command\enum\EnumFactory;
+use kim\present\lib\command\overload\Overload;
 use kim\present\lib\command\parameter\defaults\StringParameter;
 use kim\present\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
@@ -39,8 +40,8 @@ class WorldParameter extends StringParameter{
         return "commands.generic.invalidWorld";
     }
 
-    public function prepare() : Parameter{
+    public function prepare(Overload $overload, ?CommandSender $sender = null) : Parameter{
         $this->enum = EnumFactory::getInstance()->get(Enum::WORLDS);
-        return $this;
+        return parent::prepare($overload, $sender);
     }
 }

@@ -31,7 +31,6 @@ use kim\present\lib\command\handler\ClosureCommandHandler;
 use kim\present\lib\command\handler\ICommandHandler;
 use kim\present\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
 class Overload{
@@ -96,9 +95,9 @@ class Overload{
     }
 
     /** @return Parameter[] */
-    public function getParameters(Player $player) : array{
-        return Arr::mapFromAs($this->parameters, function(Parameter $parameter) use ($player): Parameter{
-            return (clone $parameter)->setName($parameter->getTranslatedName($this, $player));
+    public function getParameters(?CommandSender $sender = null) : array{
+        return Arr::mapFromAs($this->parameters, function(Parameter $parameter) use ($sender): Parameter{
+            return (clone $parameter)->prepare($this, $sender);
         });
     }
 
@@ -194,7 +193,7 @@ class Overload{
 
         $offset = 0;
         $results = [];
-        foreach($this->parameters as $parameter){
+        foreach($this->getParameters($sender) as $parameter){
             if($offset > $argsCount)
                 break;
 

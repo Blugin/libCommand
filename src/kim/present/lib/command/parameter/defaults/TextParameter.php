@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace kim\present\lib\command\parameter\defaults;
 
+use kim\present\lib\command\overload\Overload;
 use kim\present\lib\command\parameter\Parameter;
+use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
 
 class TextParameter extends Parameter{
@@ -36,8 +38,8 @@ class TextParameter extends Parameter{
         return "text";
     }
 
-    public function prepare() : Parameter{
+    public function prepare(Overload $overload, ?CommandSender $sender = null) : Parameter{
         $this->setLength(PHP_INT_MAX);
-        return $this;
+        return parent::prepare($overload, $sender);
     }
 }

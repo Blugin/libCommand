@@ -64,8 +64,8 @@ class NamedOverload extends Overload{
     }
 
     /** @return Parameter[] */
-    public function getParameters(Player $player) : array{
-        return array_merge([$this->getNameParameter(false, $this->getTranslatedName($player))], parent::getParameters($player));
+    public function getParameters(?CommandSender $sender = null) : array{
+        return array_merge([$this->getNameParameter(false, $this->getTranslatedName($sender))], parent::getParameters($sender));
     }
 
     public function addParamater(Parameter $parameter) : Overload{

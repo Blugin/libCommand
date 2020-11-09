@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace kim\present\lib\command\parameter\defaults;
 
+use kim\present\lib\command\overload\Overload;
 use kim\present\lib\command\parameter\Parameter;
 use kim\present\lib\stringutils\StringUtils as Str;
 use pocketmine\command\CommandSender;
@@ -43,9 +44,9 @@ class Vector3Parameter extends Parameter{
         return "x y z";
     }
 
-    public function prepare() : Parameter{
+    public function prepare(Overload $overload, ?CommandSender $sender = null) : Parameter{
         $this->setLength(3);
-        return $this;
+        return parent::prepare($overload, $sender);
     }
 
     public function valid(CommandSender $sender, string $argument) : bool{

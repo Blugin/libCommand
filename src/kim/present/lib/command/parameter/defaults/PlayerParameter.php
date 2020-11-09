@@ -26,6 +26,7 @@ namespace kim\present\lib\command\parameter\defaults;
 
 use kim\present\lib\command\enum\Enum;
 use kim\present\lib\command\enum\EnumFactory;
+use kim\present\lib\command\overload\Overload;
 use kim\present\lib\command\parameter\Parameter;
 use pocketmine\command\CommandSender;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
@@ -46,9 +47,9 @@ class PlayerParameter extends EnumParameter{
         return "commands.generic.player.notFound";
     }
 
-    public function prepare() : Parameter{
+    public function prepare(Overload $overload, ?CommandSender $sender = null) : Parameter{
         $this->enum = EnumFactory::getInstance()->get($this->isIncludeOffline() ? Enum::PLAYERS_INCLUE_OFFLINE : Enum::PLAYERS);
-        return $this;
+        return parent::prepare($overload, $sender);
     }
 
     public function valid(CommandSender $sender, string $argument) : bool{
