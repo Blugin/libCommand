@@ -96,9 +96,9 @@ class Overload{
     }
 
     /** @return Parameter[] */
-    public function getParameters(Player $player) : array{
-        return Arr::mapFromAs($this->parameters, function(Parameter $parameter) use ($player): Parameter{
-            return (clone $parameter)->setName($parameter->getTranslatedName($this, $player));
+    public function getParameters(?CommandSender $sender = null) : array{
+        return Arr::mapFromAs($this->parameters, function(Parameter $parameter) use ($sender): Parameter{
+            return (clone $parameter)->setName($parameter->getTranslatedName($this, $sender));
         });
     }
 
@@ -194,7 +194,7 @@ class Overload{
 
         $offset = 0;
         $results = [];
-        foreach($this->parameters as $parameter){
+        foreach($this->getParameters($sender) as $parameter){
             if($offset > $argsCount)
                 break;
 
