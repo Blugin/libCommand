@@ -29,8 +29,8 @@ use kim\present\lib\command\parameter\additions\ConstParameter;
 use kim\present\lib\command\parameter\Parameter;
 use kim\present\lib\command\traits\LabelHolderTrait;
 use kim\present\lib\command\traits\NameHolderTrait;
+use kim\present\lib\stringutils\StringUtils as Str;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
 
 class NamedOverload extends Overload{
     use LabelHolderTrait, NameHolderTrait;
@@ -65,7 +65,9 @@ class NamedOverload extends Overload{
 
     /** @return Parameter[] */
     public function getParameters(?CommandSender $sender = null) : array{
-        return array_merge([$this->getNameParameter(false, $this->getTranslatedName($sender))], parent::getParameters($sender));
+        return array_merge([
+            $this->getNameParameter(false, $this->getTranslatedName($sender))->prepare($this, $sender)
+        ], parent::getParameters($sender));
     }
 
     public function addParamater(Parameter $parameter) : Overload{
@@ -98,11 +100,11 @@ class NamedOverload extends Overload{
         if($name === null)
             return false;
 
-        if($this->getNameParameter()->parseSilent($sender, $name) !== null)
+        if(Str::equals($this->name, $name, false))
             return true;
 
         foreach($this->aliases as $alias){
-            if($this->getNameParameter(false, $alias)->parseSilent($sender, $name) !== null)
+            if(Str::equals($alias, $name, false))
                 return true;
         }
         return false;
@@ -119,7 +121,7 @@ class NamedOverload extends Overload{
      * @return mixed[]|int name => value. if parse failed return int
      */
     public function parse(CommandSender $sender, array $args){
-        if(!$this->testName($sender, array_shift($args)))
+        if(!$this->testName($sender, $args[0]))
             return self::ERROR_NAME_MISMATCH;
 
         return parent::parse($sender, $args);
