@@ -26,10 +26,10 @@ namespace kim\present\lib\command\enum;
 
 use kim\present\lib\arrayutils\ArrayUtils as Arr;
 use kim\present\lib\stringutils\StringUtils as Str;
-use kim\present\traits\singleton\SingletonTrait;
 use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\SingletonTrait;
 
 class EnumFactory{
     use SingletonTrait;
